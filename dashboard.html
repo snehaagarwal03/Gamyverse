@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gamyverse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/footer.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <div class="gradient-background">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="dashboard.html">
+                    <img src="assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </a>
+            </div>
+            <div class="user-profile">
+                <div class="dropdown">
+                    <button class="dropdown-toggle">
+                        <i data-feather="user"></i>
+                        <span id="username-display">User</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="profile.html">Profile</a>
+                        <a href="#" id="logout-btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav>
+                    <ul>
+                        <li class="active"><a href="dashboard.html"><i data-feather="home"></i> Dashboard</a></li>
+                        <li><a href="#"><i data-feather="users"></i> Active Users</a></li>
+                        <li><a href="profile.html"><i data-feather="user"></i> Profile</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="dashboard-content">
+                <h1>Welcome to your Gaming Universe</h1>
+                <p>Choose a game below to start playing</p>
+                
+                <div class="game-cards">
+                    <div class="game-card" data-game="snake">
+                        <div class="card-content">
+                            <i data-feather="zap"></i>
+                            <h3>Snake</h3>
+                            <p>Control a snake to eat apples and grow longer without hitting walls or yourself.</p>
+                            <div class="card-footer">
+                                <span class="high-score">High Score: <span id="snake-highscore">0</span></span>
+                                <a href="games/snake.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card" data-game="sudoku">
+                        <div class="card-content">
+                            <i data-feather="grid"></i>
+                            <h3>Sudoku</h3>
+                            <p>Test your logical thinking by filling a 9×9 grid with numbers according to specific rules.</p>
+                            <div class="card-footer">
+                                <span class="high-score">Best Time: <span id="sudoku-besttime">--:--</span></span>
+                                <a href="games/sudoku.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card" data-game="whackamole">
+                        <div class="card-content">
+                            <i data-feather="target"></i>
+                            <h3>Whack-a-Mole</h3>
+                            <p>A classic arcade game where you whack as many moles as possible in limited time.</p>
+                            <div class="card-footer">
+                                <span class="high-score">High Score: <span id="whackamole-highscore">0</span></span>
+                                <a href="games/whackamole.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card" data-game="2048">
+                        <div class="card-content">
+                            <i data-feather="layers"></i>
+                            <h3>2048</h3>
+                            <p>Combine matching tiles to create the elusive 2048 tile in this addictive puzzle game.</p>
+                            <div class="card-footer">
+                                <span class="high-score">High Score: <span id="2048-highscore">0</span></span>
+                                <a href="games/2048.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card" data-game="memorymatch">
+                        <div class="card-content">
+                            <i data-feather="copy"></i>
+                            <h3>Memory Match</h3>
+                            <p>Test your memory by matching pairs of cards in this classic concentration game.</p>
+                            <div class="card-footer">
+                                <span class="high-score">Best Time: <span id="memorymatch-besttime">--:--</span></span>
+                                <a href="games/memorymatch.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-card" data-game="pacman">
+                        <div class="card-content">
+                            <i data-feather="disc"></i>
+                            <h3>Pacman</h3>
+                            <p>Navigate through a maze, eating dots while avoiding ghosts in this iconic arcade game.</p>
+                            <div class="card-footer">
+                                <span class="high-score">High Score: <span id="pacman-highscore">0</span></span>
+                                <a href="games/pacman.html" class="btn btn-sm">Play Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i data-feather="twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i data-feather="facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i data-feather="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Gamyverse. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/games.js"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            
+            // Check if user is logged in
+            checkAuthStatus();
+            
+            // Update high scores
+            updateHighScores();
+            
+            // Logout button functionality
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+    </script>
+</body>
+</html>

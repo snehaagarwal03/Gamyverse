@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whack-a-Mole - Gamyverse</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components/header.css">
+    <link rel="stylesheet" href="../css/components/footer.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        
+        .game-stat {
+            background-color: rgba(10, 25, 41, 0.7);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .mole-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+        }
+        
+        .mole-hole {
+            position: relative;
+            background-color: #2a3e5c;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .mole {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #4e7ac7;
+            border-radius: 50%;
+            transition: bottom 0.2s;
+        }
+        
+        .mole.active {
+            bottom: 0;
+        }
+        
+        .mole .face {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+        }
+        
+        .mole.whacked {
+            background-color: #ff4757;
+        }
+        
+        .difficulty-select {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .difficulty-btn {
+            padding: 8px 15px;
+            background-color: #0a1929;
+            border: 1px solid #4e7ac7;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .difficulty-btn.active {
+            background-color: #1e4976;
+            border-color: #00ffcc;
+        }
+        
+        .leaderboard {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .leaderboard th, .leaderboard td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #2a3e5c;
+        }
+        
+        .leaderboard th {
+            background-color: #0a1929;
+            color: #4e7ac7;
+        }
+        
+        .game-instructions {
+            margin-top: 20px;
+            background-color: rgba(10, 25, 41, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 500px;
+        }
+        
+        .game-instructions h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-background">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="../dashboard.html">
+                    <img src="../assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </a>
+            </div>
+            <div class="user-profile">
+                <div class="dropdown">
+                    <button class="dropdown-toggle">
+                        <i data-feather="user"></i>
+                        <span id="username-display">User</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="../profile.html">Profile</a>
+                        <a href="#" id="logout-btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game Container -->
+        <div class="game-container">
+            <div class="game-header">
+                <a href="../dashboard.html" class="btn btn-secondary">
+                    <i data-feather="arrow-left"></i> Back to Dashboard
+                </a>
+                <h1>Whack-a-Mole</h1>
+                <div></div> <!-- Empty div for flex alignment -->
+            </div>
+            
+            <div class="game-controls">
+                <button id="start-btn" class="btn btn-primary">Start Game</button>
+                <button id="save-score-btn" class="btn btn-secondary" disabled>Save Score</button>
+                <button id="show-leaderboard-btn" class="btn btn-secondary">Show Leaderboard</button>
+            </div>
+            
+            <div class="difficulty-select">
+                <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+            
+            <div class="game-stats">
+                <div class="game-stat">
+                    <h3>Score</h3>
+                    <p id="score-display">0</p>
+                </div>
+                <div class="game-stat">
+                    <h3>High Score</h3>
+                    <p id="high-score-display">0</p>
+                </div>
+                <div class="game-stat">
+                    <h3>Time Left</h3>
+                    <p id="time-display">30</p>
+                </div>
+            </div>
+            
+            <div class="mole-grid" id="mole-grid">
+                <!-- 9 mole holes -->
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+                <div class="mole-hole">
+                    <div class="mole">
+                        <div class="face">😊</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-instructions">
+                <h3>How to Play:</h3>
+                <p>Whack as many moles as you can before the time runs out! Click on a mole to whack it and earn points.</p>
+                <p><strong>Difficulty:</strong></p>
+                <ul>
+                    <li>Easy: Moles move slower, stay up longer</li>
+                    <li>Medium: Moles move at moderate speed</li>
+                    <li>Hard: Moles move faster, stay up for shorter time</li>
+                </ul>
+            </div>
+            
+            <div class="leaderboard" id="leaderboard" style="display: none;">
+                <h2>Leaderboard</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <!-- Leaderboard entries will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </div>
+                <div class="footer-links">
+                    <a href="../dashboard.html">Dashboard</a>
+                    <a href="../profile.html">Profile</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i data-feather="twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i data-feather="facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i data-feather="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Gamyverse. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/leaderboard.js"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            
+            // Check if user is logged in
+            checkAuthStatus();
+            
+            // Update high score display
+            updateHighScore();
+            
+            // Logout button functionality
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+        
+        // Game variables
+        let score = 0;
+        let timeLeft = 30;
+        let gameInterval;
+        let moleInterval;
+        let gameRunning = false;
+        let difficulty = 'easy';
+        let difficultySettings = {
+            easy: { minDelay: 1000, maxDelay: 2000, visibleTime: 1500 },
+            medium: { minDelay: 800, maxDelay: 1600, visibleTime: 1200 },
+            hard: { minDelay: 600, maxDelay: 1200, visibleTime: 900 }
+        };
+        
+        // DOM elements
+        const startBtn = document.getElementById('start-btn');
+        const saveScoreBtn = document.getElementById('save-score-btn');
+        const showLeaderboardBtn = document.getElementById('show-leaderboard-btn');
+        const scoreDisplay = document.getElementById('score-display');
+        const highScoreDisplay = document.getElementById('high-score-display');
+        const timeDisplay = document.getElementById('time-display');
+        const moleGrid = document.getElementById('mole-grid');
+        const moles = document.querySelectorAll('.mole');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        saveScoreBtn.addEventListener('click', saveScore);
+        showLeaderboardBtn.addEventListener('click', toggleLeaderboard);
+        
+        // Add click event to each mole
+        moles.forEach(mole => {
+            mole.addEventListener('click', () => {
+                if (!gameRunning || !mole.classList.contains('active')) return;
+                
+                // Whack the mole
+                whackMole(mole);
+            });
+        });
+        
+        // Set difficulty
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (gameRunning) return;
+                
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                difficulty = btn.getAttribute('data-difficulty');
+            });
+        });
+        
+        // Start game
+        function startGame() {
+            if (gameRunning) return;
+            
+            // Reset game state
+            resetGame();
+            
+            // Start game loop
+            gameRunning = true;
+            startBtn.textContent = 'Game Running';
+            startBtn.disabled = true;
+            saveScoreBtn.disabled = true;
+            
+            // Start timer
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            // Start showing moles
+            showRandomMole();
+        }
+        
+        // Reset game
+        function resetGame() {
+            score = 0;
+            timeLeft = 30;
+            scoreDisplay.textContent = score;
+            timeDisplay.textContent = timeLeft;
+            
+            // Hide all moles
+            moles.forEach(mole => {
+                mole.classList.remove('active');
+                mole.classList.remove('whacked');
+            });
+            
+            // Clear intervals
+            if (gameInterval) clearInterval(gameInterval);
+            if (moleInterval) clearInterval(moleInterval);
+        }
+        
+        // Show random mole
+        function showRandomMole() {
+            // Get random mole
+            const randomIndex = Math.floor(Math.random() * moles.length);
+            const mole = moles[randomIndex];
+            
+            // Make sure mole is not already active
+            if (mole.classList.contains('active')) {
+                showRandomMole();
+                return;
+            }
+            
+            // Show mole
+            mole.classList.add('active');
+            mole.classList.remove('whacked');
+            
+            // Get settings based on difficulty
+            const settings = difficultySettings[difficulty];
+            
+            // Hide mole after some time
+            setTimeout(() => {
+                if (mole.classList.contains('active')) {
+                    mole.classList.remove('active');
+                }
+            }, settings.visibleTime);
+            
+            // Schedule next mole
+            const delay = Math.random() * (settings.maxDelay - settings.minDelay) + settings.minDelay;
+            moleInterval = setTimeout(showRandomMole, delay);
+        }
+        
+        // Whack a mole
+        function whackMole(mole) {
+            // Check if mole is active
+            if (!mole.classList.contains('active')) return;
+            
+            // Mark as whacked
+            mole.classList.add('whacked');
+            mole.classList.remove('active');
+            
+            // Change face
+            mole.querySelector('.face').textContent = '😵';
+            
+            // Increase score
+            score += 10;
+            scoreDisplay.textContent = score;
+            
+            // Reset face after a short delay
+            setTimeout(() => {
+                mole.querySelector('.face').textContent = '😊';
+            }, 500);
+        }
+        
+        // End game
+        function endGame() {
+            // Stop game loop
+            clearInterval(gameInterval);
+            clearTimeout(moleInterval);
+            gameRunning = false;
+            
+            // Reset button
+            startBtn.textContent = 'Start Game';
+            startBtn.disabled = false;
+            
+            // Enable save score button
+            saveScoreBtn.disabled = false;
+            
+            // Hide all moles
+            moles.forEach(mole => {
+                mole.classList.remove('active');
+                mole.classList.remove('whacked');
+            });
+            
+            // Check if high score
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const username = currentUser.username;
+                const highScore = parseInt(localStorage.getItem(`whackamole_highscore_${username}`) || 0);
+                
+                if (score > highScore) {
+                    localStorage.setItem(`whackamole_highscore_${username}`, score);
+                    highScoreDisplay.textContent = score;
+                    alert(`New high score: ${score}!`);
+                }
+            }
+        }
+        
+        // Save score
+        function saveScore() {
+            if (score === 0) return;
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            
+            const username = currentUser.username;
+            const highScore = parseInt(localStorage.getItem(`whackamole_highscore_${username}`) || 0);
+            
+            if (score > highScore) {
+                localStorage.setItem(`whackamole_highscore_${username}`, score);
+                alert(`New high score: ${score}!`);
+            } else {
+                alert(`Score saved: ${score}. Your high score is ${highScore}.`);
+            }
+            
+            // Add to leaderboard
+            addToLeaderboard('whackamole', score, difficulty);
+            
+            // Disable save button
+            saveScoreBtn.disabled = true;
+        }
+        
+        // Update high score display
+        function updateHighScore() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const username = currentUser.username;
+                const highScore = localStorage.getItem(`whackamole_highscore_${username}`) || 0;
+                highScoreDisplay.textContent = highScore;
+            }
+        }
+        
+        // Toggle leaderboard visibility
+        function toggleLeaderboard() {
+            if (leaderboardDiv.style.display === 'none') {
+                leaderboardDiv.style.display = 'block';
+                showLeaderboardBtn.textContent = 'Hide Leaderboard';
+                displayLeaderboard('whackamole');
+            } else {
+                leaderboardDiv.style.display = 'none';
+                showLeaderboardBtn.textContent = 'Show Leaderboard';
+            }
+        }
+    </script>
+</body>
+</html>

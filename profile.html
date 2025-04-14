@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Gamyverse</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/footer.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <div class="gradient-background">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="dashboard.html">
+                    <img src="assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </a>
+            </div>
+            <div class="user-profile">
+                <div class="dropdown">
+                    <button class="dropdown-toggle">
+                        <i data-feather="user"></i>
+                        <span id="username-display">User</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="profile.html">Profile</a>
+                        <a href="#" id="logout-btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav>
+                    <ul>
+                        <li><a href="dashboard.html"><i data-feather="home"></i> Dashboard</a></li>
+                        <li><a href="#"><i data-feather="users"></i> Active Users</a></li>
+                        <li class="active"><a href="profile.html"><i data-feather="user"></i> Profile</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="dashboard-content">
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i data-feather="user" class="profile-avatar-icon"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h1 id="profile-username">Username</h1>
+                            <p id="profile-email">email@example.com</p>
+                            <p>Member since: <span id="profile-joined">January 1, 2023</span></p>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <h2>Your Gaming Stats</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="zap"></i></div>
+                                <div class="stat-info">
+                                    <h3>Snake</h3>
+                                    <p>High Score: <span id="profile-snake-score">0</span></p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="grid"></i></div>
+                                <div class="stat-info">
+                                    <h3>Sudoku</h3>
+                                    <p>Best Time: <span id="profile-sudoku-time">--:--</span></p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="target"></i></div>
+                                <div class="stat-info">
+                                    <h3>Whack-a-Mole</h3>
+                                    <p>High Score: <span id="profile-whackamole-score">0</span></p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="layers"></i></div>
+                                <div class="stat-info">
+                                    <h3>2048</h3>
+                                    <p>High Score: <span id="profile-2048-score">0</span></p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="copy"></i></div>
+                                <div class="stat-info">
+                                    <h3>Memory Match</h3>
+                                    <p>Best Time: <span id="profile-memorymatch-time">--:--</span></p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i data-feather="disc"></i></div>
+                                <div class="stat-info">
+                                    <h3>Pacman</h3>
+                                    <p>High Score: <span id="profile-pacman-score">0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </div>
+                <div class="footer-links">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="profile.html">Profile</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i data-feather="twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i data-feather="facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i data-feather="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Gamyverse. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/games.js"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            
+            // Check if user is logged in
+            checkAuthStatus();
+            
+            // Display user profile information
+            displayProfileInfo();
+            
+            // Display user game stats
+            displayGameStats();
+            
+            // Logout button functionality
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+        
+        function displayProfileInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('profile-username').textContent = currentUser.username;
+                document.getElementById('profile-email').textContent = currentUser.email || 'No email provided';
+                
+                // Format joined date (using current date as a mock)
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const joinedDate = new Date().toLocaleDateString('en-US', options);
+                document.getElementById('profile-joined').textContent = joinedDate;
+            }
+        }
+        
+        function displayGameStats() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const username = currentUser.username;
+                
+                // Get scores from localStorage
+                const snakeScore = localStorage.getItem(`snake_highscore_${username}`) || '0';
+                const sudokuTime = localStorage.getItem(`sudoku_besttime_${username}`) || '--:--';
+                const whackamoleScore = localStorage.getItem(`whackamole_highscore_${username}`) || '0';
+                const game2048Score = localStorage.getItem(`2048_highscore_${username}`) || '0';
+                const memorymatchTime = localStorage.getItem(`memorymatch_besttime_${username}`) || '--:--';
+                const pacmanScore = localStorage.getItem(`pacman_highscore_${username}`) || '0';
+                
+                // Update the display
+                document.getElementById('profile-snake-score').textContent = snakeScore;
+                document.getElementById('profile-sudoku-time').textContent = sudokuTime;
+                document.getElementById('profile-whackamole-score').textContent = whackamoleScore;
+                document.getElementById('profile-2048-score').textContent = game2048Score;
+                document.getElementById('profile-memorymatch-time').textContent = memorymatchTime;
+                document.getElementById('profile-pacman-score').textContent = pacmanScore;
+            }
+        }
+    </script>
+</body>
+</html>

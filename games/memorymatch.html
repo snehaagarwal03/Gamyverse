@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match - Gamyverse</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components/header.css">
+    <link rel="stylesheet" href="../css/components/footer.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        
+        .game-stat {
+            background-color: rgba(10, 25, 41, 0.7);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .memory-card {
+            height: 120px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .memory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .memory-card.flipped .memory-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .memory-card-front, .memory-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .memory-card-front {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        }
+        
+        .memory-card-back {
+            background-color: var(--bg-dark);
+            transform: rotateY(180deg);
+            font-size: 2.5rem;
+            color: var(--secondary);
+        }
+        
+        .memory-card-front i {
+            font-size: 2rem;
+            color: var(--bg-darkest);
+        }
+        
+        .memory-card.matched .memory-card-back {
+            background-color: rgba(0, 255, 204, 0.2);
+        }
+        
+        .difficulty-select {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .difficulty-btn {
+            padding: 8px 15px;
+            background-color: var(--bg-darkest);
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--text-light);
+        }
+        
+        .difficulty-btn.active {
+            background-color: var(--primary-dark);
+            border-color: var(--secondary);
+        }
+        
+        .leaderboard {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .leaderboard th, .leaderboard td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--bg-medium);
+        }
+        
+        .leaderboard th {
+            background-color: var(--bg-darkest);
+            color: var(--primary);
+        }
+        
+        .game-instructions {
+            margin-top: 20px;
+            background-color: rgba(10, 25, 41, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        
+        .game-instructions h3 {
+            margin-top: 0;
+        }
+        
+        .game-over-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 25, 41, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .game-over-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--bg-dark);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-dark);
+        }
+        
+        .modal-content h2 {
+            color: var(--secondary);
+            margin-top: 0;
+        }
+        
+        .modal-content p {
+            margin-bottom: 20px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .memory-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .memory-card {
+                height: 80px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .game-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-background">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="../dashboard.html">
+                    <img src="../assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </a>
+            </div>
+            <div class="user-profile">
+                <div class="dropdown">
+                    <button class="dropdown-toggle">
+                        <i data-feather="user"></i>
+                        <span id="username-display">User</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="../profile.html">Profile</a>
+                        <a href="#" id="logout-btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game Container -->
+        <div class="game-container">
+            <div class="game-header">
+                <a href="../dashboard.html" class="btn btn-secondary">
+                    <i data-feather="arrow-left"></i> Back to Dashboard
+                </a>
+                <h1>Memory Match</h1>
+                <div></div> <!-- Empty div for flex alignment -->
+            </div>
+            
+            <div class="game-controls">
+                <button id="new-game-btn" class="btn btn-primary">New Game</button>
+                <button id="save-score-btn" class="btn btn-secondary" disabled>Save Score</button>
+                <button id="show-leaderboard-btn" class="btn btn-secondary">Show Leaderboard</button>
+            </div>
+            
+            <div class="difficulty-select">
+                <button class="difficulty-btn active" data-pairs="8">Easy (8 pairs)</button>
+                <button class="difficulty-btn" data-pairs="10">Medium (10 pairs)</button>
+                <button class="difficulty-btn" data-pairs="12">Hard (12 pairs)</button>
+            </div>
+            
+            <div class="game-stats">
+                <div class="game-stat">
+                    <h3>Moves</h3>
+                    <p id="moves-count">0</p>
+                </div>
+                <div class="game-stat">
+                    <h3>Pairs Found</h3>
+                    <p><span id="pairs-found">0</span>/<span id="total-pairs">8</span></p>
+                </div>
+                <div class="game-stat">
+                    <h3>Time</h3>
+                    <p id="time-display">00:00</p>
+                </div>
+                <div class="game-stat">
+                    <h3>Best Time</h3>
+                    <p id="best-time-display">--:--</p>
+                </div>
+            </div>
+            
+            <div class="memory-grid" id="memory-grid">
+                <!-- Cards will be generated dynamically -->
+            </div>
+            
+            <div class="game-instructions">
+                <h3>How to Play:</h3>
+                <p>Find all matching pairs of cards by turning them over two at a time. The game is complete when all pairs are found.</p>
+                <p><strong>Controls:</strong> Click on cards to flip them over and find matching pairs.</p>
+            </div>
+            
+            <div class="leaderboard" id="leaderboard" style="display: none;">
+                <h2>Leaderboard</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Time</th>
+                            <th>Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                        <!-- Leaderboard entries will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Game Over Modal -->
+        <div class="game-over-modal" id="game-over-modal">
+            <div class="modal-content">
+                <h2>Congratulations!</h2>
+                <p>You've found all pairs in <span id="final-time">00:00</span> with <span id="final-moves">0</span> moves!</p>
+                <div class="modal-buttons">
+                    <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+                    <button id="modal-save-score-btn" class="btn btn-secondary">Save Score</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../assets/logo.png" alt="Gamyverse Logo">
+                    <span>Gamyverse</span>
+                </div>
+                <div class="footer-links">
+                    <a href="../dashboard.html">Dashboard</a>
+                    <a href="../profile.html">Profile</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i data-feather="twitter"></i></a>
+                    <a href="#" aria-label="Facebook"><i data-feather="facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i data-feather="instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Gamyverse. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/leaderboard.js"></script>
+    <script>
+        // Initialize Feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+            
+            // Check if user is logged in
+            checkAuthStatus();
+            
+            // Update best time display
+            updateBestTime();
+            
+            // Logout button functionality
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+        
+        // Game variables
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let totalPairs = 8; // Default to easy
+        let moves = 0;
+        let gameStarted = false;
+        let gameTimer;
+        let seconds = 0;
+        let canFlip = true;
+        let currentDifficulty = 'Easy (8 pairs)';
+        
+        // Card icons (Feather icons) - ensure we have enough for hardest difficulty
+        const cardIcons = [
+            'heart', 'star', 'circle', 'square', 'triangle', 'award', 'bell', 'bookmark',
+            'camera', 'cloud', 'coffee', 'gift', 'globe', 'home', 'music', 'sun',
+            'moon', 'umbrella', 'truck', 'thumbs-up', 'smile', 'shopping-cart', 'map'
+        ];
+        
+        // DOM elements
+        const memoryGrid = document.getElementById('memory-grid');
+        const newGameBtn = document.getElementById('new-game-btn');
+        const saveScoreBtn = document.getElementById('save-score-btn');
+        const showLeaderboardBtn = document.getElementById('show-leaderboard-btn');
+        const movesDisplay = document.getElementById('moves-count');
+        const pairsFoundDisplay = document.getElementById('pairs-found');
+        const totalPairsDisplay = document.getElementById('total-pairs');
+        const timeDisplay = document.getElementById('time-display');
+        const bestTimeDisplay = document.getElementById('best-time-display');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const finalTimeDisplay = document.getElementById('final-time');
+        const finalMovesDisplay = document.getElementById('final-moves');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const modalSaveScoreBtn = document.getElementById('modal-save-score-btn');
+        
+        // Event listeners
+        newGameBtn.addEventListener('click', startNewGame);
+        saveScoreBtn.addEventListener('click', saveScore);
+        showLeaderboardBtn.addEventListener('click', toggleLeaderboard);
+        playAgainBtn.addEventListener('click', () => {
+            closeModal();
+            startNewGame();
+        });
+        modalSaveScoreBtn.addEventListener('click', () => {
+            saveScore();
+            modalSaveScoreBtn.disabled = true;
+        });
+        
+        // Add click event to difficulty buttons
+        difficultyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (gameStarted) {
+                    if (!confirm('Changing difficulty will reset the current game. Continue?')) {
+                        return;
+                    }
+                }
+                
+                difficultyBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                totalPairs = parseInt(btn.getAttribute('data-pairs'));
+                totalPairsDisplay.textContent = totalPairs;
+                currentDifficulty = btn.textContent;
+                startNewGame();
+            });
+        });
+        
+        // Initialize game for the first time
+        initializeGrid();
+        
+        // Initialize grid
+        function initializeGrid() {
+            memoryGrid.innerHTML = '';
+            cards = [];
+            
+            // Calculate grid layout based on total pairs
+            let cols;
+            if (totalPairs <= 8) cols = 4;
+            else if (totalPairs <= 10) cols = 5;
+            else cols = 6;
+            
+            // Update grid columns
+            memoryGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            
+            // Create cards
+            const selectedIcons = shuffleArray(cardIcons).slice(0, totalPairs);
+            const cardPairs = [...selectedIcons, ...selectedIcons];
+            cards = shuffleArray(cardPairs);
+            
+            // Clear grid and create new cards
+            memoryGrid.innerHTML = '';
+            
+            cards.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.setAttribute('data-index', index);
+                card.setAttribute('data-icon', icon);
+                
+                card.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">
+                            <i data-feather="help-circle"></i>
+                        </div>
+                        <div class="memory-card-back">
+                            <i data-feather="${icon}"></i>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => flipCard(card, index));
+                memoryGrid.appendChild(card);
+            });
+            
+            // Initialize Feather icons for cards
+            feather.replace();
+        }
+        
+        // Start new game
+        function startNewGame() {
+            // Reset game state
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            seconds = 0;
+            canFlip = true;
+            gameStarted = true;
+            
+            // Update displays
+            pairsFoundDisplay.textContent = '0';
+            movesDisplay.textContent = '0';
+            timeDisplay.textContent = '00:00';
+            
+            // Clear timer
+            if (gameTimer) clearInterval(gameTimer);
+            
+            // Initialize grid
+            initializeGrid();
+            
+            // Start timer
+            gameTimer = setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                timeDisplay.textContent = `${minutes}:${secs}`;
+            }, 1000);
+            
+            // Disable save button
+            saveScoreBtn.disabled = true;
+        }
+        
+        // Flip a card
+        function flipCard(card, index) {
+            // Return if card is already flipped or matched, or if can't flip
+            if (card.classList.contains('flipped') || 
+                card.classList.contains('matched') || 
+                !canFlip || 
+                flippedCards.length >= 2) {
+                return;
+            }
+            
+            // Flip the card
+            card.classList.add('flipped');
+            
+            // Add to flipped cards
+            flippedCards.push({ card, index });
+            
+            // If we have 2 flipped cards, check for a match
+            if (flippedCards.length === 2) {
+                moves++;
+                movesDisplay.textContent = moves;
+                canFlip = false;
+                
+                setTimeout(() => {
+                    checkForMatch();
+                    canFlip = true;
+                }, 800);
+            }
+        }
+        
+        // Check if the two flipped cards match
+        function checkForMatch() {
+            const [card1, card2] = flippedCards;
+            
+            // If icons match
+            if (cards[card1.index] === cards[card2.index]) {
+                // Mark as matched
+                card1.card.classList.add('matched');
+                card2.card.classList.add('matched');
+                
+                // Increment matched pairs
+                matchedPairs++;
+                pairsFoundDisplay.textContent = matchedPairs;
+                
+                // Check if game is complete
+                if (matchedPairs === totalPairs) {
+                    endGame();
+                }
+            } else {
+                // Flip cards back
+                card1.card.classList.remove('flipped');
+                card2.card.classList.remove('flipped');
+            }
+            
+            // Clear flipped cards
+            flippedCards = [];
+        }
+        
+        // End game
+        function endGame() {
+            // Stop timer
+            clearInterval(gameTimer);
+            gameStarted = false;
+            
+            // Format final time
+            const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            const finalTime = `${minutes}:${secs}`;
+            
+            // Update final displays
+            finalTimeDisplay.textContent = finalTime;
+            finalMovesDisplay.textContent = moves;
+            
+            // Check if this is a new best time
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const username = currentUser.username;
+                const difficultyKey = totalPairs;
+                const bestTimeKey = `memorymatch_besttime_${username}_${difficultyKey}`;
+                const currentBestTime = localStorage.getItem(bestTimeKey);
+                
+                if (!currentBestTime || !currentBestTime.includes(':') || seconds < timeToSeconds(currentBestTime)) {
+                    localStorage.setItem(bestTimeKey, finalTime);
+                    bestTimeDisplay.textContent = finalTime;
+                }
+            }
+            
+            // Enable save button
+            saveScoreBtn.disabled = false;
+            
+            // Show game over modal
+            showModal();
+        }
+        
+        // Save score
+        function saveScore() {
+            if (matchedPairs !== totalPairs) return;
+            
+            const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const secs = (seconds % 60).toString().padStart(2, '0');
+            const finalTime = `${minutes}:${secs}`;
+            
+            // Add to leaderboard
+            addToLeaderboard('memorymatch', seconds, currentDifficulty);
+            
+            // Disable save buttons
+            saveScoreBtn.disabled = true;
+            if (modalSaveScoreBtn) modalSaveScoreBtn.disabled = true;
+            
+            alert(`Score saved! Your time: ${finalTime}`);
+        }
+        
+        // Update best time display
+        function updateBestTime() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const username = currentUser.username;
+                const difficultyKey = totalPairs;
+                const bestTime = localStorage.getItem(`memorymatch_besttime_${username}_${difficultyKey}`) || '--:--';
+                bestTimeDisplay.textContent = bestTime;
+            }
+        }
+        
+        // Toggle leaderboard visibility
+        function toggleLeaderboard() {
+            if (leaderboardDiv.style.display === 'none') {
+                leaderboardDiv.style.display = 'block';
+                showLeaderboardBtn.textContent = 'Hide Leaderboard';
+                displayLeaderboard('memorymatch');
+            } else {
+                leaderboardDiv.style.display = 'none';
+                showLeaderboardBtn.textContent = 'Show Leaderboard';
+            }
+        }
+        
+        // Show game over modal
+        function showModal() {
+            gameOverModal.classList.add('active');
+        }
+        
+        // Close game over modal
+        function closeModal() {
+            gameOverModal.classList.remove('active');
+        }
+        
+        // Convert time string to seconds
+        function timeToSeconds(timeStr) {
+            const [minutes, seconds] = timeStr.split(':').map(Number);
+            return minutes * 60 + seconds;
+        }
+        
+        // Shuffle array
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+    </script>
+</body>
+</html>

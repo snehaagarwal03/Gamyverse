@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gamyverse</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/components/header.css" />
+    <link rel="stylesheet" href="css/components/footer.css" />
+    <link rel="stylesheet" href="css/components/cards.css" />
+    <script src="https://unpkg.com/feather-icons"></script>
+  </head>
+  <body>
+    <div class="gradient-background">
+      <header class="header">
+        <div class="logo">
+          <a href="index.html">
+            <img src="assets/logo.png" alt="Gamyverse Logo" />
+            <span>Gamyverse</span>
+          </a>
+        </div>
+        <div class="nav-buttons">
+          <a href="login.html" class="btn btn-primary">Login</a>
+          <a href="signup.html" class="btn btn-secondary">Sign Up</a>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Welcome to Gamyverse</h1>
+          <p>
+            Discover the ultimate gaming universe with our collection of classic
+            and fun games
+          </p>
+          <a href="login.html" class="btn btn-cta">Let's Get Started</a>
+        </div>
+        <div class="hero-overlay"></div>
+      </section>
+
+      <section class="games-showcase">
+        <h2>Our Games Collection</h2>
+        <div class="game-cards">
+          <div class="game-card" data-game="snake">
+            <div class="card-content">
+              <i data-feather="zap"></i>
+              <h3>Snake</h3>
+              <p>
+                Control a snake to eat apples and grow longer without hitting
+                walls or yourself.
+              </p>
+            </div>
+          </div>
+          <div class="game-card" data-game="sudoku">
+            <div class="card-content">
+              <i data-feather="grid"></i>
+              <h3>Sudoku</h3>
+              <p>
+                Test your logical thinking by filling a 9×9 grid with numbers
+                according to specific rules.
+              </p>
+            </div>
+          </div>
+          <div class="game-card" data-game="whackamole">
+            <div class="card-content">
+              <i data-feather="target"></i>
+              <h3>Whack-a-Mole</h3>
+              <p>
+                A classic arcade game where you whack as many moles as possible
+                in limited time.
+              </p>
+            </div>
+          </div>
+          <div class="game-card" data-game="2048">
+            <div class="card-content">
+              <i data-feather="layers"></i>
+              <h3>2048</h3>
+              <p>
+                Combine matching tiles to create the elusive 2048 tile in this
+                addictive puzzle game.
+              </p>
+            </div>
+          </div>
+          <div class="game-card" data-game="memorymatch">
+            <div class="card-content">
+              <i data-feather="copy"></i>
+              <h3>Memory Match</h3>
+              <p>
+                Test your memory by matching pairs of cards in this classic
+                concentration game.
+              </p>
+            </div>
+          </div>
+          <div class="game-card" data-game="pacman">
+            <div class="card-content">
+              <i data-feather="disc"></i>
+              <h3>Pacman</h3>
+              <p>
+                Navigate through a maze, eating dots while avoiding ghosts in
+                this iconic arcade game.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-logo-title">
+            <span>Gamyverse</span>
+            <p class="footer-tagline">An Ultimate Gaming Universe</p>
+          </div>
+          <div class="footer-social">
+            <a href="mailto:snehaagarwal1322@gmail.com" aria-label="Gmail">
+              <i data-feather="mail"></i>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/snehaagarwal03"
+              aria-label="LinkedIn"
+              target="_blank"
+            >
+              <i data-feather="linkedin"></i>
+            </a>
+            <a
+              href="https://github.com/snehaagarwal03"
+              aria-label="GitHub"
+              target="_blank"
+            >
+              <i data-feather="github"></i>
+            </a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Gamyverse. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      document.querySelectorAll(".game-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          window.location.href = "login.html";
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        feather.replace();
+      });
+    </script>
+  </body>
+</html>
