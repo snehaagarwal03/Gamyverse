@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="gradient-background">
-      <!-- Header -->
+
       <header class="header">
         <div class="logo">
           <a href="dashboard.html">
@@ -34,9 +34,8 @@
         </div>
       </header>
 
-      <!-- Dashboard Layout -->
       <div class="dashboard-container">
-        <!-- Sidebar -->
+
         <aside class="sidebar">
           <nav>
             <ul>
@@ -55,7 +54,6 @@
           </nav>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="dashboard-content">
           <h1>Welcome to your Gaming Universe</h1>
           <p>Choose a game below to start playing</p>
@@ -146,22 +144,6 @@
                 </div>
               </div>
             </div>
-            <div class="game-card" data-game="pacman">
-              <div class="card-content">
-                <i data-feather="disc"></i>
-                <h3>Pacman</h3>
-                <p>
-                  Navigate through a maze, eating dots while avoiding ghosts in
-                  this iconic arcade game.
-                </p>
-                <div class="card-footer">
-                  <span class="high-score"
-                    >High Score: <span id="pacman-highscore">0</span></span
-                  >
-                  <a href="games/pacman.html" class="btn btn-sm">Play Now</a>
-                </div>
-              </div>
-            </div>
           </div>
         </main>
       </div>
@@ -203,14 +185,9 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
-        // Check if user is logged in
         checkAuthStatus();
-
-        // Update high scores
         updateHighScores();
 
-        // Logout button functionality
         document.getElementById("logout-btn").addEventListener("click", (e) => {
           e.preventDefault();
           logout();
