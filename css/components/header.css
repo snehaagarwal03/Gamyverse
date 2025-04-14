@@ -21,7 +21,7 @@
   align-items: center;
   color: var(--text-light);
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 2rem;
   transition: color var(--transition-fast);
 }
 
@@ -50,7 +50,7 @@
   }
   
   .logo a {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
   }
   
   .nav-buttons {
