@@ -1,20 +1,24 @@
 /**
  * Authentication Module for Gamyverse
- * Handles user registration, login, and session management using localStorage
+ * Handles user registration, login, and session management using JWT tokens and backend API
  */
+
+// API base URL
+const API_URL = 'http://localhost:5000/api';
 
 // Check if user is already logged in
 function checkAuthStatus() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const token = localStorage.getItem('token');
+    const currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
     
     // If on login or signup page but already logged in, redirect to dashboard
-    if (currentUser && (window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html'))) {
+    if (token && currentUser && (window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html'))) {
         window.location.href = 'dashboard.html';
         return;
     }
     
     // If on dashboard or game pages but not logged in, redirect to login
-    if (!currentUser && (window.location.pathname.includes('dashboard.html') || 
+    if ((!token || !currentUser) && (window.location.pathname.includes('dashboard.html') || 
                           window.location.pathname.includes('/games/') ||
                           window.location.pathname.includes('profile.html'))) {
         window.location.href = window.location.pathname.includes('/games/') ? '../login.html' : 'login.html';
@@ -32,7 +36,7 @@ function checkAuthStatus() {
 
 // Handle login form submission
 if (document.getElementById('login-form')) {
-    document.getElementById('login-form').addEventListener('submit', function(e) {
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get form inputs
@@ -45,31 +49,41 @@ if (document.getElementById('login-form')) {
             return;
         }
         
-        // Get users from localStorage
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        // Find user with matching credentials
-        const user = users.find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            // Store current user in localStorage (without password)
-            const currentUser = {
-                username: user.username,
-                email: user.email
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        try {
+            // Send login request to API
+            const response = await fetch(`${API_URL}/users/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+            
+            // Store token and user info in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('currentUser', JSON.stringify({
+                id: data.user.id,
+                username: data.user.username,
+                email: data.user.email
+            }));
             
             // Redirect to dashboard
             window.location.href = 'dashboard.html';
-        } else {
-            showError('Invalid username or password');
+        } catch (error) {
+            showError(error.message || 'Login failed');
         }
     });
 }
 
 // Handle signup form submission
 if (document.getElementById('signup-form')) {
-    document.getElementById('signup-form').addEventListener('submit', function(e) {
+    document.getElementById('signup-form').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get form inputs
@@ -77,6 +91,8 @@ if (document.getElementById('signup-form')) {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
+        const gender = document.getElementById('gender') ? document.getElementById('gender').value : null;
+        const age = document.getElementById('age') ? document.getElementById('age').value : null;
         
         // Validate inputs
         if (!username || !email || !password || !confirmPassword) {
@@ -94,43 +110,42 @@ if (document.getElementById('signup-form')) {
             return;
         }
         
-        // Get users from localStorage
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        // Check if username already exists
-        if (users.some(u => u.username === username)) {
-            showError('Username already exists');
-            return;
+        try {
+            // Send registration request to API
+            const response = await fetch(`${API_URL}/users/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, gender, age })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+            
+            // Store token and user info in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('currentUser', JSON.stringify({
+                id: data.user.id,
+                username: data.user.username,
+                email: data.user.email
+            }));
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        } catch (error) {
+            showError(error.message || 'Registration failed');
         }
-        
-        // Create new user
-        const newUser = {
-            username,
-            email,
-            password
-        };
-        
-        // Add new user to users array
-        users.push(newUser);
-        
-        // Update users in localStorage
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        // Store current user in localStorage (without password)
-        const currentUser = {
-            username,
-            email
-        };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
     });
 }
 
 // Logout functionality
 function logout() {
-    // Remove current user from localStorage
+    // Remove token and user from localStorage
+    localStorage.removeItem('token');
     localStorage.removeItem('currentUser');
     
     // Redirect to login page
