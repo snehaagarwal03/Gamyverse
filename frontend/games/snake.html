@@ -78,6 +78,74 @@
         color: #4e7ac7;
       }
 
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 42, 58, 0.95) 0%,
+          rgba(10, 25, 41, 0.95) 100%
+        );
+        border-radius: var(--border-radius-lg);
+        padding: 2.5rem;
+        text-align: center;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(78, 122, 199, 0.5);
+        animation: modalFadeIn 0.3s ease;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .score-display-large {
+        margin: 1.5rem 0;
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .score-label {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        margin-left: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .current-user {
+        font-weight: bold;
+      }
+
       @media (max-width: 768px) {
         #game-canvas {
           width: 100%;
@@ -87,9 +155,9 @@
       }
     </style>
   </head>
+
   <body>
     <div class="gradient-background">
-      <!-- Header -->
       <header class="header">
         <div class="logo">
           <a href="../dashboard.html">
@@ -99,7 +167,6 @@
         </div>
       </header>
 
-      <!-- Game Container -->
       <div class="game-container">
         <div class="game-header">
           <a href="../dashboard.html" class="btn btn-secondary">
@@ -117,9 +184,6 @@
 
         <div class="game-controls">
           <button id="start-btn" class="btn btn-primary">Start New Game</button>
-          <button id="save-score-btn" class="btn btn-secondary" disabled>
-            Save Score
-          </button>
           <button id="show-leaderboard-btn" class="btn btn-secondary">
             Show Leaderboard
           </button>
@@ -192,24 +256,22 @@
     <script src="../js/auth.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
-      // Initialize Feather icons
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
 
-        // Check if user is logged in
         checkAuthStatus();
 
-        // Show high score
         updateSnakeHighScore();
 
-        // Logout button functionality
-        document.getElementById("logout-btn").addEventListener("click", (e) => {
-          e.preventDefault();
-          logout();
-        });
+        const logoutBtn = document.getElementById("logout-btn");
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            logout();
+          });
+        }
       });
 
-      // Game variables
       const canvas = document.getElementById("game-canvas");
       const ctx = canvas.getContext("2d");
       const GRID_SIZE = 20;
@@ -223,9 +285,7 @@
       let gameRunning = false;
       let gameLoop;
 
-      // Game elements
       const startBtn = document.getElementById("start-btn");
-      const saveScoreBtn = document.getElementById("save-score-btn");
       const showLeaderboardBtn = document.getElementById(
         "show-leaderboard-btn"
       );
@@ -233,37 +293,26 @@
       const currentScoreSpan = document.getElementById("current-score");
       const highScoreSpan = document.getElementById("high-score");
 
-      // Initialize the game
       function initGame() {
-        // Reset snake
         snake = [
           { x: 6, y: 10 },
           { x: 5, y: 10 },
           { x: 4, y: 10 },
         ];
 
-        // Reset direction
         direction = "right";
         nextDirection = "right";
-
-        // Reset score
         score = 0;
         currentScoreSpan.textContent = score;
 
-        // Generate food
         generateFood();
-
-        // Draw initial state
         draw();
       }
 
-      // Generate food at random position
       function generateFood() {
-        // Generate random position
         let foodX = Math.floor(Math.random() * GRID_COUNT);
         let foodY = Math.floor(Math.random() * GRID_COUNT);
 
-        // Check if food is on snake, if so generate again
         const isOnSnake = snake.some(
           (segment) => segment.x === foodX && segment.y === foodY
         );
@@ -275,19 +324,14 @@
         food = { x: foodX, y: foodY };
       }
 
-      // Draw game elements
       function draw() {
-        // Clear canvas
         ctx.fillStyle = "#0a1929";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw snake
         snake.forEach((segment, index) => {
           if (index === 0) {
-            // Head
             ctx.fillStyle = "#00ffcc";
           } else {
-            // Body
             ctx.fillStyle = "#4e7ac7";
           }
           ctx.fillRect(
@@ -297,7 +341,6 @@
             GRID_SIZE
           );
 
-          // Draw outline
           ctx.strokeStyle = "#0a1929";
           ctx.strokeRect(
             segment.x * GRID_SIZE,
@@ -307,7 +350,6 @@
           );
         });
 
-        // Draw food
         ctx.fillStyle = "#ff4757";
         ctx.beginPath();
         const centerX = food.x * GRID_SIZE + GRID_SIZE / 2;
@@ -317,11 +359,9 @@
         ctx.fill();
       }
 
-      // Move snake
       function moveSnake() {
         direction = nextDirection;
 
-        // Calculate new head position
         const head = { x: snake[0].x, y: snake[0].y };
         switch (direction) {
           case "up":
@@ -338,7 +378,6 @@
             break;
         }
 
-        // Check collision with walls
         if (
           head.x < 0 ||
           head.x >= GRID_COUNT ||
@@ -349,7 +388,6 @@
           return;
         }
 
-        // Check collision with self
         if (
           snake.some((segment) => segment.x === head.x && segment.y === head.y)
         ) {
@@ -357,129 +395,212 @@
           return;
         }
 
-        // Add new head
         snake.unshift(head);
 
-        // Check if food is eaten
         if (head.x === food.x && head.y === food.y) {
-          // Increase score
           score += 10;
           currentScoreSpan.textContent = score;
-
-          // Generate new food
           generateFood();
         } else {
-          // Remove tail
           snake.pop();
         }
       }
 
-      // Game loop
       function gameStep() {
         moveSnake();
         draw();
       }
 
-      // Start game
       function startGame() {
         if (gameRunning) return;
 
         initGame();
         gameRunning = true;
         startBtn.textContent = "Restart Game";
-        saveScoreBtn.disabled = true;
 
-        // Start game loop
         gameLoop = setInterval(gameStep, 150);
       }
 
-      // Game over
       function gameOver() {
         clearInterval(gameLoop);
         gameRunning = false;
-        saveScoreBtn.disabled = false;
 
-        // Show game over message
         ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         ctx.fillStyle = "#fff";
         ctx.font = "30px Arial";
         ctx.textAlign = "center";
         ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 30);
 
-        ctx.font = "20px Arial";
-        ctx.fillText(
-          `Score: ${score}`,
-          canvas.width / 2,
-          canvas.height / 2 + 10
-        );
-        ctx.fillText(
-          "Press Start to play again",
-          canvas.width / 2,
-          canvas.height / 2 + 40
-        );
+        const modal = document.getElementById("game-over-modal");
+        const finalScoreValue = document.getElementById("final-score-value");
+        finalScoreValue.textContent = score;
+
+        const saveBtn = document.getElementById("modal-save-score-btn");
+        saveBtn.textContent = "Save Score";
+        saveBtn.disabled = false;
+        saveBtn.classList.remove("btn-error");
+
+        modal.querySelector("h2").textContent = "Game Over!";
+
+        modal.style.display = "flex";
+
+        const playAgainBtn = document.getElementById("play-again-btn");
+        const newPlayAgainBtn = playAgainBtn.cloneNode(true);
+        playAgainBtn.parentNode.replaceChild(newPlayAgainBtn, playAgainBtn);
+
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+        newPlayAgainBtn.addEventListener("click", function () {
+          modal.style.display = "none";
+        });
+
+        newSaveBtn.addEventListener("click", saveScore);
       }
 
-      // Save score
-      function saveScore() {
-        if (score === 0) return;
+      async function saveScore() {
+        if (score === 0) return false;
 
-        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-        if (!currentUser) return;
-
-        const username = currentUser.username;
-        const currentHighScore =
-          localStorage.getItem(`snake_highscore_${username}`) || 0;
-
-        if (score > currentHighScore) {
-          localStorage.setItem(`snake_highscore_${username}`, score);
-          highScoreSpan.textContent = score;
-          alert(`New high score: ${score}!`);
-        } else {
-          alert(
-            `Score saved: ${score}. Your high score is ${currentHighScore}.`
-          );
+        const token = localStorage.getItem("token");
+        if (!token) {
+          const modal = document.getElementById("game-over-modal");
+          modal.querySelector("h2").textContent = "Login Required";
+          modal.querySelector(".score-display-large").innerHTML =
+            "<span style='font-size: 1.2rem; color: var(--text-muted);'>You must be logged in to save scores</span>";
+          return false;
         }
 
-        // Add to leaderboard
-        addToLeaderboard("snake", score);
+        try {
+          const saveBtn = document.getElementById("modal-save-score-btn");
+          saveBtn.textContent = "Saving...";
+          saveBtn.disabled = true;
 
-        // Disable save button
-        saveScoreBtn.disabled = true;
+          const response = await fetch(
+            "http://localhost:5000/api/sessions/snake",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ score: score }),
+            }
+          );
+
+          if (response.ok) {
+            await updateSnakeHighScore();
+            saveBtn.textContent = "Score Saved!";
+            setTimeout(() => {
+              document.getElementById("game-over-modal").style.display = "none";
+            }, 1500);
+
+            return true;
+          } else {
+            throw new Error("Failed to save score");
+          }
+        } catch (error) {
+          console.error("Error saving score:", error);
+          const saveBtn = document.getElementById("modal-save-score-btn");
+          saveBtn.textContent = "Error - Try Again";
+          saveBtn.disabled = false;
+          return false;
+        }
       }
 
-      // Toggle leaderboard visibility
-      function toggleLeaderboard() {
+      async function toggleLeaderboard() {
         if (leaderboardDiv.style.display === "none") {
           leaderboardDiv.style.display = "block";
           showLeaderboardBtn.textContent = "Hide Leaderboard";
-          displayLeaderboard("snake");
+
+          const leaderboardBody = document.querySelector("#leaderboard-body");
+          leaderboardBody.innerHTML =
+            '<tr><td colspan="3">Loading leaderboard...</td></tr>';
+
+          try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(
+              "http://localhost:5000/api/sessions/leaderboard/snake",
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Failed to fetch leaderboard");
+            }
+
+            const leaderboardData = await response.json();
+            leaderboardBody.innerHTML = "";
+
+            if (leaderboardData.length === 0) {
+              leaderboardBody.innerHTML =
+                '<tr><td colspan="3">No scores yet. Be the first to set a record!</td></tr>';
+              return;
+            }
+
+            leaderboardData.forEach((entry, index) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${entry.Username}</td>
+          <td>${entry.Score}</td>
+        `;
+
+              const currentUser = JSON.parse(
+                localStorage.getItem("currentUser")
+              );
+              if (currentUser && entry.Username === currentUser.username) {
+                row.classList.add("current-user");
+                row.style.backgroundColor = "rgba(0, 255, 204, 0.1)";
+              }
+
+              leaderboardBody.appendChild(row);
+            });
+          } catch (error) {
+            console.error("Error fetching leaderboard:", error);
+            leaderboardBody.innerHTML =
+              '<tr><td colspan="3">Error loading leaderboard. Please try again.</td></tr>';
+          }
         } else {
           leaderboardDiv.style.display = "none";
           showLeaderboardBtn.textContent = "Show Leaderboard";
         }
       }
 
-      // Update high score display
-      function updateSnakeHighScore() {
-        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-        if (currentUser) {
-          const username = currentUser.username;
-          const highScore =
-            localStorage.getItem(`snake_highscore_${username}`) || 0;
-          highScoreSpan.textContent = highScore;
+      async function updateSnakeHighScore() {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) return;
+
+          const response = await fetch(
+            "http://localhost:5000/api/sessions/stats",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch stats");
+          }
+
+          const data = await response.json();
+
+          highScoreSpan.textContent = data.bestScores.best_snake_score || "0";
+        } catch (error) {
+          console.error("Error updating high score:", error);
         }
       }
 
-      // Event listeners
       startBtn.addEventListener("click", startGame);
-      saveScoreBtn.addEventListener("click", saveScore);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
 
-      // Keyboard controls
       document.addEventListener("keydown", (e) => {
-        // Prevent default behavior for arrow keys
         if (
           [
             "ArrowUp",
@@ -495,7 +616,6 @@
           e.preventDefault();
         }
 
-        // Update direction based on key press
         switch (e.key) {
           case "ArrowUp":
           case "w":
@@ -516,8 +636,28 @@
         }
       });
 
-      // Initialize the canvas
+      document.addEventListener("DOMContentLoaded", function () {
+        updateSnakeHighScore();
+      });
       draw();
     </script>
+
+    <div id="game-over-modal" class="modal">
+      <div class="modal-content">
+        <h2>Game Over!</h2>
+        <div class="score-display-large">
+          <span id="final-score-value">0</span>
+          <span class="score-label">points</span>
+        </div>
+        <div class="modal-buttons">
+          <button id="play-again-btn" class="btn btn-primary">
+            Play Again
+          </button>
+          <button id="modal-save-score-btn" class="btn btn-cta">
+            Save Score
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

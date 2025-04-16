@@ -106,19 +106,14 @@ exports.getLeaderboard = async (req, res) => {
       case 'snake':
         // For Snake game, the highest score is best (descending order)
         query = `
-          SELECT u.Username, s.Score, s.Played_At
-          FROM SnakeGame_Sessions s
-          JOIN Users u ON s.User_Id = u.User_Id
-          WHERE (s.User_Id, s.Score) IN (
-            SELECT User_Id, MAX(Score) as MaxScore
-            FROM SnakeGame_Sessions
-            GROUP BY User_Id
-          )
-          ORDER BY s.Score DESC
-          LIMIT 10
-        `;
-        break;
-        
+    SELECT u.Username, MAX(s.Score) as Score
+    FROM SnakeGame_Sessions s
+    JOIN Users u ON s.User_Id = u.User_Id
+    GROUP BY s.User_Id
+    ORDER BY Score DESC
+    LIMIT 10
+  `;
+  break;        
       case 'whackamole':
         // For Whack A Mole, the highest score is best (descending order)
         query = `

@@ -16,6 +16,13 @@
   align-items: center;
 }
 
+.logo span {
+  background: linear-gradient(135deg, var(--text-light) 0%, var(--secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .logo a {
   display: flex;
   align-items: center;

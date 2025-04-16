@@ -68,7 +68,6 @@
         color: #ff4757;
       }
 
-      /* Add borders for 3x3 boxes */
       .sudoku-cell:nth-child(3n) {
         border-right: 2px solid #4e7ac7;
       }
@@ -188,7 +187,6 @@
   </head>
   <body>
     <div class="gradient-background">
-      <!-- Header -->
       <header class="header">
         <div class="logo">
           <a href="../dashboard.html">
@@ -198,7 +196,6 @@
         </div>
       </header>
 
-      <!-- Game Container -->
       <div class="game-container">
         <div class="game-header">
           <a href="../dashboard.html" class="btn btn-secondary">
@@ -321,21 +318,17 @@
     <script src="../js/auth.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
-      // Initialize Feather icons
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
 
-        // Check if user is logged in
         checkAuthStatus();
 
-        // Logout button functionality
         document.getElementById("logout-btn").addEventListener("click", (e) => {
           e.preventDefault();
           logout();
         });
       });
 
-      // Game variables
       let selectedCell = null;
       let board = Array(9)
         .fill()
@@ -352,7 +345,6 @@
       let difficulty = "easy";
       let gameWon = false;
 
-      // DOM elements
       const sudokuBoard = document.getElementById("sudoku-board");
       const newGameBtn = document.getElementById("new-game-btn");
       const checkBtn = document.getElementById("check-btn");
@@ -365,13 +357,10 @@
       const difficultyBtns = document.querySelectorAll(".difficulty-btn");
       const leaderboardDiv = document.getElementById("leaderboard");
 
-      // Initialize game
       initializeBoard();
 
-      // Generate board for the first time
       generateNewGame();
 
-      // Event listeners
       newGameBtn.addEventListener("click", generateNewGame);
       checkBtn.addEventListener("click", checkSolution);
       saveScoreBtn.addEventListener("click", saveScore);
@@ -387,12 +376,9 @@
         });
       });
 
-      // Initialize board
       function initializeBoard() {
-        // Clear board
         sudokuBoard.innerHTML = "";
 
-        // Create cells
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             const cell = document.createElement("div");
@@ -403,12 +389,10 @@
             cell.addEventListener("click", () => {
               if (fixedCells[row][col]) return;
 
-              // Deselect previous cell
               if (selectedCell) {
                 selectedCell.classList.remove("selected");
               }
 
-              // Select current cell
               cell.classList.add("selected");
               selectedCell = cell;
             });
@@ -417,7 +401,6 @@
           }
         }
 
-        // Add number pad event listeners
         document.querySelectorAll(".number-btn").forEach((btn) => {
           btn.addEventListener("click", () => {
             if (!selectedCell || !gameStarted) return;
@@ -429,7 +412,6 @@
 
             const number = parseInt(btn.getAttribute("data-number"));
 
-            // Clear cell if number is 0
             if (number === 0) {
               board[row][col] = 0;
               selectedCell.textContent = "";
@@ -438,7 +420,6 @@
               board[row][col] = number;
               selectedCell.textContent = number;
 
-              // Check if number is valid
               if (!isValidPlacement(row, col, number)) {
                 selectedCell.classList.add("error");
               } else {
@@ -446,7 +427,6 @@
               }
             }
 
-            // Check if board is complete
             if (isBoardComplete()) {
               if (isSolutionCorrect()) {
                 endGame(true);
@@ -456,38 +436,31 @@
         });
       }
 
-      // Generate new game
       function generateNewGame() {
-        // Reset game state
         resetGame();
-
-        // Generate a solved sudoku board
         generateSolvedBoard();
 
-        // Copy solved board to solution
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             solution[row][col] = board[row][col];
           }
         }
 
-        // Remove numbers based on difficulty
         let cellsToRemove;
         switch (difficulty) {
           case "easy":
-            cellsToRemove = 40; // Remove 40 cells (41 clues)
+            cellsToRemove = 40;
             break;
           case "medium":
-            cellsToRemove = 50; // Remove 50 cells (31 clues)
+            cellsToRemove = 50;
             break;
           case "hard":
-            cellsToRemove = 60; // Remove 60 cells (21 clues)
+            cellsToRemove = 60;
             break;
           default:
             cellsToRemove = 40;
         }
 
-        // Randomly remove cells
         for (let i = 0; i < cellsToRemove; i++) {
           let row, col;
           do {
@@ -498,47 +471,35 @@
           board[row][col] = 0;
         }
 
-        // Mark fixed cells
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             fixedCells[row][col] = board[row][col] !== 0;
           }
         }
 
-        // Update UI
         updateBoardUI();
-
-        // Start timer
         startTimer();
 
-        // Set game as started
         gameStarted = true;
       }
 
-      // Generate a solved Sudoku board
       function generateSolvedBoard() {
-        // Clear the board
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             board[row][col] = 0;
           }
         }
 
-        // Fill the diagonal 3x3 boxes
         fillDiagonalBoxes();
-
-        // Fill the rest of the board using backtracking
         solveSudoku();
       }
 
-      // Fill the diagonal 3x3 boxes (which can be filled independently)
       function fillDiagonalBoxes() {
         for (let box = 0; box < 3; box++) {
           fillBox(box * 3, box * 3);
         }
       }
 
-      // Fill a 3x3 box with random valid numbers
       function fillBox(startRow, startCol) {
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         nums = shuffleArray(nums);
@@ -551,7 +512,6 @@
         }
       }
 
-      // Shuffle array (Fisher-Yates algorithm)
       function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -560,14 +520,11 @@
         return array;
       }
 
-      // Solve the Sudoku using backtracking
       function solveSudoku() {
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
-            // Skip cells that are already filled
             if (board[row][col] !== 0) continue;
 
-            // Try different numbers
             for (let num = 1; num <= 9; num++) {
               if (isValidPlacement(row, col, num)) {
                 board[row][col] = num;
@@ -575,38 +532,28 @@
                 if (solveSudoku()) {
                   return true;
                 }
-
-                // If we reach here, the current number doesn't lead to a solution
                 board[row][col] = 0;
               }
             }
-
-            // No number works, need to backtrack
             return false;
           }
         }
-
-        // If we reach here, the board is solved
         return true;
       }
 
-      // Check if a number can be placed at a position
       function isValidPlacement(row, col, num) {
-        // Check row
         for (let c = 0; c < 9; c++) {
           if (c !== col && board[row][c] === num) {
             return false;
           }
         }
 
-        // Check column
         for (let r = 0; r < 9; r++) {
           if (r !== row && board[r][col] === num) {
             return false;
           }
         }
 
-        // Check 3x3 box
         const boxStartRow = Math.floor(row / 3) * 3;
         const boxStartCol = Math.floor(col / 3) * 3;
 
@@ -623,7 +570,6 @@
         return true;
       }
 
-      // Update the UI to reflect the current board state
       function updateBoardUI() {
         const cells = document.querySelectorAll(".sudoku-cell");
 
@@ -631,39 +577,31 @@
           const row = parseInt(cell.getAttribute("data-row"));
           const col = parseInt(cell.getAttribute("data-col"));
 
-          // Clear cell
           cell.textContent = "";
           cell.classList.remove("fixed");
           cell.classList.remove("selected");
           cell.classList.remove("error");
 
-          // Set value if not empty
           if (board[row][col] !== 0) {
             cell.textContent = board[row][col];
 
-            // Add fixed class if it's a fixed cell
             if (fixedCells[row][col]) {
               cell.classList.add("fixed");
             }
           }
         });
 
-        // Reset selected cell
         selectedCell = null;
       }
 
-      // Start timer
       function startTimer() {
-        // Clear previous timer
         if (timerInterval) {
           clearInterval(timerInterval);
         }
 
-        // Reset timer
         timer = 0;
         timerDisplay.textContent = "00:00";
 
-        // Start new timer
         timerInterval = setInterval(() => {
           timer++;
           const minutes = Math.floor(timer / 60)
@@ -674,9 +612,7 @@
         }, 1000);
       }
 
-      // Reset the game
       function resetGame() {
-        // Clear board arrays
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             board[row][col] = 0;
@@ -685,10 +621,8 @@
           }
         }
 
-        // Reset UI
         updateBoardUI();
 
-        // Clear timer
         if (timerInterval) {
           clearInterval(timerInterval);
           timerInterval = null;
@@ -696,16 +630,11 @@
 
         timer = 0;
         timerDisplay.textContent = "00:00";
-
-        // Reset game state
         gameStarted = false;
         gameWon = false;
-
-        // Reset buttons
         saveScoreBtn.disabled = true;
       }
 
-      // Check if the board is complete (all cells filled)
       function isBoardComplete() {
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
@@ -717,9 +646,7 @@
         return true;
       }
 
-      // Check if the solution is correct
       function isSolutionCorrect() {
-        // Check each row
         for (let row = 0; row < 9; row++) {
           const rowValues = new Set();
           for (let col = 0; col < 9; col++) {
@@ -730,7 +657,6 @@
           }
         }
 
-        // Check each column
         for (let col = 0; col < 9; col++) {
           const colValues = new Set();
           for (let row = 0; row < 9; row++) {
@@ -741,7 +667,6 @@
           }
         }
 
-        // Check each 3x3 box
         for (let boxRow = 0; boxRow < 3; boxRow++) {
           for (let boxCol = 0; boxCol < 3; boxCol++) {
             const boxValues = new Set();
@@ -759,7 +684,6 @@
         return true;
       }
 
-      // Check current solution
       function checkSolution() {
         if (!gameStarted) return;
 
@@ -775,7 +699,6 @@
         }
       }
 
-      // End the game
       function endGame(won) {
         clearInterval(timerInterval);
         gameStarted = false;
@@ -789,7 +712,6 @@
         }
       }
 
-      // Format time (seconds to MM:SS)
       function formatTime(seconds) {
         const minutes = Math.floor(seconds / 60)
           .toString()
@@ -798,7 +720,6 @@
         return `${minutes}:${seconds}`;
       }
 
-      // Save score
       function saveScore() {
         if (!gameWon) return;
 
@@ -808,7 +729,6 @@
         const username = currentUser.username;
         const formattedTime = formatTime(timer);
 
-        // Save best time for the user
         const bestTimeKey = `sudoku_besttime_${username}`;
         const currentBestTime = localStorage.getItem(bestTimeKey);
 
@@ -821,20 +741,16 @@
           );
         }
 
-        // Add to leaderboard
         addToLeaderboard("sudoku", timer, difficulty);
 
-        // Disable save button
         saveScoreBtn.disabled = true;
       }
 
-      // Parse time string to seconds
       function parseTimeToSeconds(timeStr) {
         const [minutes, seconds] = timeStr.split(":").map(Number);
         return minutes * 60 + seconds;
       }
 
-      // Toggle leaderboard visibility
       function toggleLeaderboard() {
         if (leaderboardDiv.style.display === "none") {
           leaderboardDiv.style.display = "block";

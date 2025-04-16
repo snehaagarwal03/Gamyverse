@@ -173,4 +173,23 @@ function showError(message) {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     checkAuthStatus();
+    
+    // Set up dropdown toggle functionality
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        });
+    }
 });
