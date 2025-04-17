@@ -228,7 +228,6 @@
   </head>
   <body>
     <div class="gradient-background">
-      <!-- Header -->
       <header class="header">
         <div class="logo">
           <a href="../dashboard.html">
@@ -238,7 +237,6 @@
         </div>
       </header>
 
-      <!-- Game Container -->
       <div class="game-container">
         <a href="../dashboard.html" class="back-to-dashboard">
           Back to Dashboard
@@ -282,7 +280,6 @@
         </div>
 
         <div class="mole-grid" id="mole-grid">
-          <!-- 9 mole holes -->
           <div class="mole-hole">
             <div class="mole">
               <div class="face">😊</div>
@@ -356,9 +353,7 @@
                 <th>Difficulty</th>
               </tr>
             </thead>
-            <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here -->
-            </tbody>
+            <tbody id="leaderboard-body"></tbody>
           </table>
         </div>
       </div>
@@ -415,20 +410,12 @@
     <script src="../js/games.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
-      // Initialize Feather icons
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
-        // Check if user is logged in
         checkAuthStatus();
-
-        // Update high score display
         updateHighScore();
-
-        // Logout button functionality
       });
 
-      // Game variables
       let score = 0;
       let timeLeft = 30;
       let gameInterval;
@@ -442,7 +429,6 @@
         hard: { minDelay: 700, maxDelay: 1400, visibleTime: 1000 },
       };
 
-      // DOM elements
       const startBtn = document.getElementById("start-btn");
       const showLeaderboardBtn = document.getElementById(
         "show-leaderboard-btn"
@@ -467,39 +453,31 @@
       const popupSaveScoreBtn = document.getElementById("popup-save-score");
       const popupPlayAgainBtn = document.getElementById("popup-play-again");
 
-      // Add event listeners
       popupSaveScoreBtn.addEventListener("click", () => {
-        // Save score and close popup immediately
         saveHighScore("whackamole", score, false, {
           difficultyLevel: difficulty,
           molesWhacked: molesWhacked,
         });
         updateHighScore();
-        // Hide popup immediately
         hideGameCompletionPopup();
       });
 
       popupPlayAgainBtn.addEventListener("click", () => {
-        // Just hide popup and reset game, but DON'T start a new game
         hideGameCompletionPopup();
         resetGame();
       });
 
-      // Event listeners
       startBtn.addEventListener("click", startGame);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
 
-      // Add click event to each mole
       moles.forEach((mole) => {
         mole.addEventListener("click", () => {
           if (!gameRunning || !mole.classList.contains("active")) return;
 
-          // Whack the mole
           whackMole(mole);
         });
       });
 
-      // Set difficulty
       difficultyBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
           if (gameRunning) return;
@@ -510,19 +488,15 @@
         });
       });
 
-      // Start game
       function startGame() {
         if (gameRunning) return;
 
-        // Reset game state
         resetGame();
 
-        // Start game loop
         gameRunning = true;
         startBtn.textContent = "Restart New Game";
         startBtn.disabled = false;
 
-        // Start timer
         gameInterval = setInterval(() => {
           timeLeft--;
           timeDisplay.textContent = timeLeft;
@@ -532,11 +506,9 @@
           }
         }, 1000);
 
-        // Start showing moles
         showRandomMole();
       }
 
-      // Reset game
       function resetGame() {
         score = 0;
         timeLeft = 30;
@@ -545,94 +517,73 @@
         timeDisplay.textContent = timeLeft;
         molesWhackedDisplay.textContent = molesWhacked;
 
-        // Hide all moles
         moles.forEach((mole) => {
           mole.classList.remove("active");
           mole.classList.remove("whacked");
         });
 
-        // Clear intervals
         if (gameInterval) clearInterval(gameInterval);
         if (moleInterval) clearTimeout(moleInterval);
 
         startBtn.textContent = "Start Game";
         startBtn.disabled = false;
 
-        // Hide completion popup if visible
         hideGameCompletionPopup();
       }
 
-      // Show random mole
       function showRandomMole() {
-        // Get random mole
         const randomIndex = Math.floor(Math.random() * moles.length);
         const mole = moles[randomIndex];
 
-        // Make sure mole is not already active
         if (mole.classList.contains("active")) {
           showRandomMole();
           return;
         }
 
-        // Show mole
         mole.classList.add("active");
         mole.classList.remove("whacked");
 
-        // Get settings based on difficulty
         const settings = difficultySettings[difficulty];
 
-        // Hide mole after some time
         setTimeout(() => {
           if (mole.classList.contains("active")) {
             mole.classList.remove("active");
           }
         }, settings.visibleTime);
 
-        // Schedule next mole
         const delay =
           Math.random() * (settings.maxDelay - settings.minDelay) +
           settings.minDelay;
         moleInterval = setTimeout(showRandomMole, delay);
       }
 
-      // Whack a mole
       function whackMole(mole) {
-        // Check if mole is active
         if (!mole.classList.contains("active") || !gameRunning) return;
 
-        // Mark as whacked
         mole.classList.add("whacked");
         mole.classList.remove("active");
 
-        // Change face
         mole.querySelector(".face").textContent = "😵";
 
-        // Increase score
         score += 10;
         scoreDisplay.textContent = score;
 
-        // Increment and display moles whacked
         molesWhacked++;
         molesWhackedDisplay.textContent = molesWhacked;
 
-        // Reset face after a short delay
         setTimeout(() => {
           mole.querySelector(".face").textContent = "😊";
         }, 500);
       }
 
-      // End game
       function endGame() {
-        // Stop game loop
         clearInterval(gameInterval);
         clearTimeout(moleInterval);
         gameRunning = false;
 
-        // Reset button
         startBtn.textContent = "Start Game";
         startBtn.disabled = false;
 
-        // Hide all moles
         moles.forEach((mole) => {
           mole.classList.remove("active");
           mole.classList.remove("whacked");
@@ -640,25 +591,21 @@
 
         const currentHighScore = parseInt(highScoreDisplay.textContent) || 0;
         if (score > currentHighScore) {
-          // Update high score display immediately for better user experience
           highScoreDisplay.textContent = score;
           console.log("New high score achieved!");
         }
 
-        // Also fetch from server to ensure we have the latest data
         updateHighScore();
 
-        // Show game completion popup
         showGameCompletionPopup();
       }
 
-      // Save score
       function saveScore() {
         if (score === 0) return;
 
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
-        // Save score using the API
+
         saveHighScore("whackamole", score, false, {
           difficultyLevel: difficulty,
           molesWhacked: molesWhacked,
@@ -666,13 +613,10 @@
           .then((success) => {
             if (success) {
               console.log("Score saved successfully");
-              // Update visual feedback
-              // Update the leaderboard if it's visible
               if (leaderboardDiv.style.display === "block") {
                 displayLeaderboard("whackamole");
               }
 
-              // Update high score display
               updateHighScore();
             } else {
               console.error("Failed to save score");
@@ -683,12 +627,10 @@
           });
       }
 
-      // Update high score display
       function updateHighScore() {
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        // Fetch high score from API instead of localStorage
         fetch(`${window.API_URL}/sessions/stats`, {
           headers: {
             Authorization: `Bearer ${getAuthToken()}`,
@@ -717,7 +659,6 @@
           showLeaderboardBtn.textContent = "Hide Leaderboard";
 
           try {
-            // Display leaderboard with error handling
             displayLeaderboard("whackamole");
           } catch (error) {
             console.error("Error loading leaderboard:", error);
@@ -730,7 +671,6 @@
         }
       }
 
-      // Show game completion popup
       function showGameCompletionPopup() {
         gameCompletionPopup.classList.add("active");
         finalScoreDisplay.textContent = score;
@@ -741,7 +681,7 @@
           popupSaveScoreBtn.textContent = "Score must be > 0";
         }
       }
-      // Hide game completion popup
+
       function hideGameCompletionPopup() {
         gameCompletionPopup.classList.remove("active");
       }
