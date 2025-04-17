@@ -1,107 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile - Gamyverse</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/components/header.css">
-    <link rel="stylesheet" href="css/components/footer.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/components/header.css" />
+    <link rel="stylesheet" href="css/components/footer.css" />
     <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="gradient-background">
-
-        <header class="header">
-            <div class="logo">
-                <a href="dashboard.html">
-                    <img src="assets/logo.png" alt="Gamyverse Logo">
-                    <span>Gamyverse</span>
-                </a>
-            </div>
-            <div class="user-profile">
-                <div class="dropdown">
-                    <button class="dropdown-toggle">
-                        <i data-feather="user"></i>
-                        <span id="username-display">User</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a href="profile.html">Profile</a>
-                        <a href="login.html" id="logout-btn">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <div class="dashboard-container">
-
-            <aside class="sidebar">
-                <nav>
-                    <ul>
-                        <li><a href="dashboard.html"><i data-feather="home"></i> Dashboard</a></li>
-                        <li class="active"><a href="profile.html"><i data-feather="user"></i> Profile</a></li>
-                    </ul>
-                </nav>
-            </aside>
-
-            <main class="dashboard-content">
-                <div class="profile-container">
-                    <div class="profile-header">
-                        <div class="profile-avatar">
-                            <i data-feather="user" class="profile-avatar-icon"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h1 id="profile-username">Username</h1>
-                            <p id="profile-email">email@example.com</p>
-                            <p>Member since: <span id="profile-joined">January 1, 2023</span></p>
-                        </div>
-                    </div>
-
-                    <div class="profile-stats">
-                        <h2>Your Gaming Stats</h2>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-icon"><i data-feather="zap"></i></div>
-                                <div class="stat-info">
-                                    <h3>Snake</h3>
-                                    <p>High Score: <span id="profile-snake-score">0</span></p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i data-feather="grid"></i></div>
-                                <div class="stat-info">
-                                    <h3>Sudoku</h3>
-                                    <p>Best Time: <span id="profile-sudoku-time">--:--</span></p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i data-feather="target"></i></div>
-                                <div class="stat-info">
-                                    <h3>Whack-a-Mole</h3>
-                                    <p>High Score: <span id="profile-whackamole-score">0</span></p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i data-feather="layers"></i></div>
-                                <div class="stat-info">
-                                    <h3>2048</h3>
-                                    <p>High Score: <span id="profile-2048-score">0</span></p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i data-feather="copy"></i></div>
-                                <div class="stat-info">
-                                    <h3>Memory Match</h3>
-                                    <p>Best Time: <span id="profile-memorymatch-time">--:--</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
+      <header class="header">
+        <div class="logo">
+          <a href="dashboard.html">
+            <img src="assets/logo.png" alt="Gamyverse Logo" />
+            <span>Gamyverse</span>
+          </a>
         </div>
+        <div class="user-profile">
+          <div class="dropdown">
+            <button class="dropdown-toggle">
+              <span class="icon-circle"><i data-feather="user"></i></span>
+              <span id="username-display">User</span>
+            </button>
+            <div class="dropdown-menu">
+              <a href="profile.html">Profile</a>
+              <a href="login.html" id="logout-btn">Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
 
-         <footer class="footer">
+      <div class="dashboard-container">
+        <aside class="sidebar">
+          <nav>
+            <ul>
+              <li>
+                <a href="dashboard.html" class="sidebar-link">
+                  <span class="icon-circle"><i data-feather="home"></i></span>
+                  <span class="sidebar-text">Dashboard</span>
+                </a>
+              </li>
+              <li class="active">
+                <a href="profile.html" class="sidebar-link">
+                  <span class="icon-circle"><i data-feather="user"></i></span>
+                  <span class="sidebar-text">Profile</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+
+        <main class="dashboard-content">
+          <div class="profile-container">
+            <div class="profile-header">
+              <div class="profile-avatar">
+                <i data-feather="user" class="profile-avatar-icon"></i>
+              </div>
+              <div class="profile-info">
+                <h1 id="profile-username">Username</h1>
+                <p id="profile-email">email@example.com</p>
+                <p>
+                  Member since: <span id="profile-joined">January 1, 2023</span>
+                </p>
+                <p id="age-container" style="display: none">
+                  Age: <span id="profile-age">Not specified</span>
+                </p>
+                <p id="gender-container" style="display: none">
+                  Gender: <span id="profile-gender">Not specified</span>
+                </p>
+              </div>
+              <div class="profile-edit">
+                <button id="edit-profile-btn" class="edit-profile-btn">
+                  <i data-feather="edit-2"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="profile-stats">
+              <h2>Your Gaming Stats</h2>
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-icon"><i data-feather="zap"></i></div>
+                  <div class="stat-info">
+                    <h3>Snake</h3>
+                    <p>High Score: <span id="profile-snake-score">0</span></p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon"><i data-feather="grid"></i></div>
+                  <div class="stat-info">
+                    <h3>Sudoku</h3>
+                    <p>
+                      Best Time: <span id="profile-sudoku-time">--:--</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon"><i data-feather="target"></i></div>
+                  <div class="stat-info">
+                    <h3>Whack-a-Mole</h3>
+                    <p>
+                      High Score: <span id="profile-whackamole-score">0</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon"><i data-feather="layers"></i></div>
+                  <div class="stat-info">
+                    <h3>2048</h3>
+                    <p>High Score: <span id="profile-2048-score">0</span></p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon"><i data-feather="copy"></i></div>
+                  <div class="stat-info">
+                    <h3>Memory Match</h3>
+                    <p>
+                      Best Time:
+                      <span id="profile-memorymatch-time">--:--</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer class="footer">
         <div class="footer-content">
           <div class="footer-logo-title">
             <span>Gamyverse</span>
@@ -133,52 +161,272 @@
       </footer>
     </div>
 
+    <div id="edit-profile-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="edit-profile-form">
+          <div class="form-group">
+            <label for="edit-username">Username:</label>
+            <input type="text" id="edit-username" name="username" disabled />
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email" name="email" disabled />
+          </div>
+          <div class="form-group">
+            <label for="edit-age">Age:</label>
+            <input type="number" id="edit-age" name="age" min="1" max="120" />
+          </div>
+          <div class="form-group">
+            <label for="edit-gender">Gender:</label>
+            <select id="edit-gender" name="gender">
+              <option value="">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/games.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            feather.replace();        
-            checkAuthStatus();         
-            displayProfileInfo();        
-            displayGameStats();
-            
-            document.getElementById('logout-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                logout();
-            });
+      document.addEventListener("DOMContentLoaded", () => {
+        feather.replace();
+        checkAuthStatus();
+        displayProfileInfo();
+        displayGameStats();
+
+        document.getElementById("logout-btn").addEventListener("click", (e) => {
+          e.preventDefault();
+          logout();
         });
-        
-        function displayProfileInfo() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                document.getElementById('profile-username').textContent = currentUser.username;
-                document.getElementById('profile-email').textContent = currentUser.email || 'No email provided';
-                
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                const joinedDate = new Date().toLocaleDateString('en-US', options);
-                document.getElementById('profile-joined').textContent = joinedDate;
+      });
+
+      function displayGameStats() {
+        fetch(`${window.API_URL}/sessions/stats`, {
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.bestScores) {
+              document.getElementById("profile-snake-score").textContent =
+                data.bestScores.best_snake_score || "0";
+              document.getElementById("profile-sudoku-time").textContent =
+                formatTime(data.bestScores.best_sudoku_time) || "--:--";
+              document.getElementById("profile-whackamole-score").textContent =
+                data.bestScores.best_whackamole_score || "0";
+              document.getElementById("profile-2048-score").textContent =
+                data.bestScores.best_2048_score || "0";
+              document.getElementById("profile-memorymatch-time").textContent =
+                formatTime(data.bestScores.best_memorymatch_time) || "--:--";
             }
+          })
+          .catch((error) => console.error("Error fetching game stats:", error));
+      }
+
+      function formatTime(seconds) {
+        if (!seconds) return "--:--";
+        const mins = Math.floor(seconds / 60)
+          .toString()
+          .padStart(2, "0");
+        const secs = (seconds % 60).toString().padStart(2, "0");
+        return `${mins}:${secs}`;
+      }
+
+      // Edit Profile functionality
+      const modal = document.getElementById("edit-profile-modal");
+      const editBtn = document.getElementById("edit-profile-btn");
+      const closeBtn = document.querySelector(".close");
+      const editForm = document.getElementById("edit-profile-form");
+
+      // Open modal
+      editBtn.addEventListener("click", () => {
+        // Get current user data
+        getCurrentUserData();
+        modal.style.display = "block";
+      });
+
+      // Close modal
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
         }
-        
-        function displayGameStats() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                const username = currentUser.username;
-                
-                const snakeScore = localStorage.getItem(`snake_highscore_${username}`) || '0';
-                const sudokuTime = localStorage.getItem(`sudoku_besttime_${username}`) || '--:--';
-                const whackamoleScore = localStorage.getItem(`whackamole_highscore_${username}`) || '0';
-                const game2048Score = localStorage.getItem(`2048_highscore_${username}`) || '0';
-                const memorymatchTime = localStorage.getItem(`memorymatch_besttime_${username}`) || '--:--';
-                const pacmanScore = localStorage.getItem(`pacman_highscore_${username}`) || '0';
-                
-                document.getElementById('profile-snake-score').textContent = snakeScore;
-                document.getElementById('profile-sudoku-time').textContent = sudokuTime;
-                document.getElementById('profile-whackamole-score').textContent = whackamoleScore;
-                document.getElementById('profile-2048-score').textContent = game2048Score;
-                document.getElementById('profile-memorymatch-time').textContent = memorymatchTime;
+      });
+
+      // Get current user data for form
+      function getCurrentUserData() {
+        fetch(`${window.API_URL}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const user = data.user || data;
+            // Save to localStorage for persistence
+            localStorage.setItem(
+              "currentUser",
+              JSON.stringify({
+                id: user.User_Id,
+                username: user.Username,
+                email: user.Email,
+                age: user.Age,
+                gender: user.Gender,
+              })
+            );
+            document.getElementById("edit-username").value =
+              user.Username || "";
+            document.getElementById("edit-email").value = user.Email || "";
+            document.getElementById("edit-age").value = user.Age || "";
+            document.getElementById("edit-gender").value = user.Gender || "";
+          })
+          .catch((error) =>
+            console.error("Error fetching user profile:", error)
+          );
+      }
+      // Handle form submission
+      editForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("edit-username").value;
+        const email = document.getElementById("edit-email").value;
+        const age = document.getElementById("edit-age").value;
+        const gender = document.getElementById("edit-gender").value;
+        console.log("Sending request to:", `${window.API_URL}/users/update`);
+        console.log("Token is:", localStorage.getItem("token"));
+        console.log("Payload:", { username, email, age, gender });
+
+        // Update profile via API
+        fetch(`${window.API_URL}/users/update`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            age,
+            gender,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to update profile");
             }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Backend response:", data); // Yeh line add karo
+
+            // Show age and gender containers if values exist
+            const user = data.user || data;
+            if (!user || !user.User_Id) {
+              alert("Profile update failed: User data not found in response.");
+              console.error("Profile update failed. Backend response:", data);
+              return;
+            }
+            // Save to localStorage for persistence
+            localStorage.setItem(
+              "currentUser",
+              JSON.stringify({
+                id: user.User_Id,
+                username: user.Username,
+                email: user.Email,
+                age: user.Age,
+                gender: user.Gender,
+              })
+            );
+
+            if (age) {
+              document.getElementById("age-container").style.display = "block";
+              document.getElementById("profile-age").textContent = age;
+            } else {
+              document.getElementById("age-container").style.display = "none";
+            }
+            if (gender) {
+              document.getElementById("gender-container").style.display =
+                "block";
+              document.getElementById("profile-gender").textContent = gender;
+            } else {
+              document.getElementById("gender-container").style.display =
+                "none";
+            }
+            // Close modal
+            modal.style.display = "none";
+
+            // Show success message
+            alert("Profile updated successfully!");
+          })
+          .catch((error) => {
+            console.error("Error updating profile:", error);
+            alert("Failed to update profile. Please try again.");
+          });
+      });
+
+      function displayProfileInfo() {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        if (currentUser) {
+          document.getElementById("username-display").textContent =
+            currentUser.username;
+          document.getElementById("profile-username").textContent =
+            currentUser.username;
+          document.getElementById("profile-email").textContent =
+            currentUser.email || "No email provided";
         }
+
+        fetch(`${window.API_URL}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.user && data.user.Date_Joined) {
+              const joinedDate = new Date(
+                data.user.Date_Joined
+              ).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+              document.getElementById("profile-joined").textContent =
+                joinedDate;
+            }
+            if (data.user && data.user.Age) {
+              document.getElementById("age-container").style.display = "block";
+              document.getElementById("profile-age").textContent =
+                data.user.Age;
+            } else {
+              document.getElementById("age-container").style.display = "none";
+            }
+
+            if (data.user && data.user.Gender) {
+              document.getElementById("gender-container").style.display =
+                "block";
+              document.getElementById("profile-gender").textContent =
+                data.user.Gender;
+            } else {
+              document.getElementById("gender-container").style.display =
+                "none";
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching profile info:", error)
+          );
+      }
     </script>
-</body>
+  </body>
 </html>

@@ -1,0 +1,74 @@
+/* Only for landing page */
+.landing-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 90vh;
+  width: 100vw;
+  position: relative;
+  z-index: 1;
+  padding-top: 1.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.landing-main .hero-content {
+  margin-bottom: 2.5rem;
+  text-align: center;
+  z-index: 2;
+  background: none;
+  padding: 0;
+}
+
+.landing-main .game-title {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4e7ac7 0%, #00c6a7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.landing-main .hero-content p {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #e3f6ff;
+  background: none;
+  text-shadow: 0 2px 8px rgba(0, 198, 167, 0.1);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.01em;
+}
+
+.landing-main .game-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: center;
+  width: 90vw;
+  max-width: 1200px;
+  padding: 0;
+  margin: 0 auto;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.landing-main .game-card {
+  width: 100%;
+  max-width: 340px;
+  min-height: 220px;
+  transition: transform 0.25s cubic-bezier(0.4, 2, 0.6, 1), box-shadow 0.25s;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.landing-main .game-card:hover {
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 12px 32px 0 rgba(0, 198, 167, 0.18),
+    0 1.5px 8px rgba(0, 0, 0, 0.18);
+  z-index: 3;
+}

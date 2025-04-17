@@ -1,13 +1,26 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { registerUser, loginUser, getUserProfile } = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware');
+const {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+} = require("../controllers/userController");
+const { protect } = require("../middleware/authMiddleware");
 
 // Public routes
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 
 // Protected routes
-router.get('/profile', protect, getUserProfile);
-
+router.get("/profile", protect, getUserProfile);
+router.post(
+  "/update",
+  protect,
+  (req, res, next) => {
+    console.log("POST /api/users/update hit");
+    next();
+  },
+  updateUserProfile
+);
 module.exports = router;

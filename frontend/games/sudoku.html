@@ -25,6 +25,8 @@
 
       .game-controls {
         display: flex;
+        justify-content: center;
+        align-items: center;
         gap: 10px;
         margin-bottom: 20px;
       }
@@ -79,32 +81,6 @@
       .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
       .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
         border-bottom: 2px solid #4e7ac7;
-      }
-
-      .number-pad {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 5px;
-        margin-top: 20px;
-        max-width: 300px;
-        width: 100%;
-      }
-
-      .number-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 40px;
-        background-color: #0a1929;
-        border: 1px solid #4e7ac7;
-        border-radius: 5px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-
-      .number-btn:hover {
-        background-color: #1a2a3a;
       }
 
       .game-info {
@@ -178,9 +154,93 @@
         margin-top: 0;
       }
 
+      /* Game popup styles */
+      .game-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+
+      .game-popup-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .game-popup {
+        background-color: #0a1929;
+        border: 2px solid #4e7ac7;
+        border-radius: 10px;
+        padding: 20px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+        transform: scale(0.8);
+        transition: transform 0.3s;
+      }
+
+      .game-popup-overlay.active .game-popup {
+        transform: scale(1);
+      }
+
+      .game-popup h2 {
+        color: #00ffcc;
+        margin-top: 0;
+      }
+
+      .game-popup p {
+        margin: 15px 0;
+        font-size: 18px;
+      }
+
+      .game-popup .popup-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .game-popup .popup-buttons button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s;
+      }
+
+      .game-popup .popup-buttons .btn-primary {
+        background-color: #00ffcc;
+        color: #0a1929;
+      }
+
+      .game-popup .popup-buttons .btn-secondary {
+        background-color: #4e7ac7;
+        color: white;
+      }
+
+      .game-popup .popup-buttons button:hover {
+        opacity: 0.9;
+      }
+
       @media (max-width: 500px) {
-        .number-pad {
-          grid-template-columns: repeat(5, 1fr);
+        .game-popup {
+          padding: 15px;
+        }
+
+        .game-popup .popup-buttons {
+          flex-direction: column;
+          gap: 10px;
         }
       }
     </style>
@@ -197,22 +257,17 @@
       </header>
 
       <div class="game-container">
-        <div class="game-header">
-          <a href="../dashboard.html" class="btn btn-secondary">
-            <i data-feather="arrow-left"></i> Back to Dashboard
-          </a>
-          <h1>Sudoku</h1>
-          <div></div>
-          <!-- Empty div for flex alignment -->
-        </div>
+        <a href="../dashboard.html" class="back-to-dashboard">
+          Back to Dashboard
+        </a>
+        <h1 class="game-title">Sudoku</h1>
 
         <div class="game-controls">
-          <button id="new-game-btn" class="btn btn-primary">New Game</button>
+          <button id="start-game-btn" class="btn btn-primary">
+            Start Game
+          </button>
           <button id="check-btn" class="btn btn-secondary">
             Check Solution
-          </button>
-          <button id="save-score-btn" class="btn btn-secondary" disabled>
-            Save Score
           </button>
           <button id="show-leaderboard-btn" class="btn btn-secondary">
             Show Leaderboard
@@ -238,19 +293,6 @@
 
         <div class="sudoku-board" id="sudoku-board">
           <!-- Sudoku cells will be generated here -->
-        </div>
-
-        <div class="number-pad">
-          <div class="number-btn" data-number="1">1</div>
-          <div class="number-btn" data-number="2">2</div>
-          <div class="number-btn" data-number="3">3</div>
-          <div class="number-btn" data-number="4">4</div>
-          <div class="number-btn" data-number="5">5</div>
-          <div class="number-btn" data-number="6">6</div>
-          <div class="number-btn" data-number="7">7</div>
-          <div class="number-btn" data-number="8">8</div>
-          <div class="number-btn" data-number="9">9</div>
-          <div class="number-btn" data-number="0">Clear</div>
         </div>
 
         <div class="game-instructions">
@@ -280,6 +322,36 @@
               <!-- Leaderboard entries will be inserted here -->
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="game-popup-overlay" id="game-completion-popup">
+        <div class="game-popup">
+          <h2>Game Over!</h2>
+          <p>Congratulations! You completed the puzzle.</p>
+          <p>Your time: <span id="completion-time">00:00</span></p>
+          <div class="popup-buttons">
+            <button id="popup-save-score" class="btn-primary">
+              Save Score
+            </button>
+            <button id="popup-play-again" class="btn-secondary">
+              Play Again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-popup-overlay" id="check-solution-popup">
+        <div class="game-popup">
+          <h2>Show Solution?</h2>
+          <p>Do you want to see the solution?</p>
+          <p>
+            Your score will not be recorded if you choose to see the solution.
+          </p>
+          <div class="popup-buttons">
+            <button id="show-solution-yes" class="btn-secondary">Yes</button>
+            <button id="show-solution-no" class="btn-primary">No</button>
+          </div>
         </div>
       </div>
 
@@ -316,17 +388,13 @@
     </div>
 
     <script src="../js/auth.js"></script>
+    <script src="../js/games.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
 
         checkAuthStatus();
-
-        document.getElementById("logout-btn").addEventListener("click", (e) => {
-          e.preventDefault();
-          logout();
-        });
       });
 
       let selectedCell = null;
@@ -346,9 +414,8 @@
       let gameWon = false;
 
       const sudokuBoard = document.getElementById("sudoku-board");
-      const newGameBtn = document.getElementById("new-game-btn");
+      const startGameBtn = document.getElementById("start-game-btn");
       const checkBtn = document.getElementById("check-btn");
-      const saveScoreBtn = document.getElementById("save-score-btn");
       const showLeaderboardBtn = document.getElementById(
         "show-leaderboard-btn"
       );
@@ -357,22 +424,77 @@
       const difficultyBtns = document.querySelectorAll(".difficulty-btn");
       const leaderboardDiv = document.getElementById("leaderboard");
 
+      const gameCompletionPopup = document.getElementById(
+        "game-completion-popup"
+      );
+      const completionTimeDisplay = document.getElementById("completion-time");
+      const popupSaveScoreBtn = document.getElementById("popup-save-score");
+      const popupPlayAgainBtn = document.getElementById("popup-play-again");
+
+      const checkSolutionPopup = document.getElementById(
+        "check-solution-popup"
+      );
+      const showSolutionYesBtn = document.getElementById("show-solution-yes");
+      const showSolutionNoBtn = document.getElementById("show-solution-no");
+
       initializeBoard();
 
       generateNewGame();
 
-      newGameBtn.addEventListener("click", generateNewGame);
-      checkBtn.addEventListener("click", checkSolution);
-      saveScoreBtn.addEventListener("click", saveScore);
+      startGameBtn.addEventListener("click", () => {
+        if (!gameStarted && startGameBtn.textContent === "Start Game") {
+          // This is the normal "Start Game" case - starting a fresh game
+          startTimer();
+          gameStarted = true;
+          startGameBtn.textContent = "Restart Game";
+          startGameBtn.disabled = true;
+
+          difficultyDisplay.textContent =
+            difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+        } else {
+          // This handles both:
+          // 1. Clicking "Restart Game" after viewing solution
+          // 2. Clicking "Restart Game" during active gameplay
+          resetGame();
+          generateNewGame();
+          // Make sure check button is re-enabled
+          checkBtn.disabled = false;
+        }
+      });
+
+      checkBtn.addEventListener("click", confirmCheckSolution);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
+
+      // Popup button event listeners
+      popupSaveScoreBtn.addEventListener("click", () => {
+        saveScore();
+        // Flash a success message
+        popupSaveScoreBtn.textContent = "Score Saved!";
+        popupSaveScoreBtn.disabled = true;
+        setTimeout(() => {
+          popupSaveScoreBtn.textContent = "Save Score";
+        }, 2000);
+      });
+
+      popupPlayAgainBtn.addEventListener("click", () => {
+        hideGameCompletionPopup();
+        generateNewGame();
+      });
+
+      showSolutionYesBtn.addEventListener("click", () => {
+        hideCheckSolutionPopup();
+        showSolution();
+      });
+
+      showSolutionNoBtn.addEventListener("click", () => {
+        hideCheckSolutionPopup();
+      });
 
       difficultyBtns.forEach((btn) => {
         btn.addEventListener("click", (e) => {
           difficultyBtns.forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
           difficulty = btn.getAttribute("data-difficulty");
-          difficultyDisplay.textContent =
-            difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
         });
       });
 
@@ -401,30 +523,26 @@
           }
         }
 
-        document.querySelectorAll(".number-btn").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            if (!selectedCell || !gameStarted) return;
+        // Add keyboard event listener to the document
+        document.addEventListener("keydown", (e) => {
+          if (!selectedCell || !gameStarted) return;
 
-            const row = parseInt(selectedCell.getAttribute("data-row"));
-            const col = parseInt(selectedCell.getAttribute("data-col"));
+          const row = parseInt(selectedCell.getAttribute("data-row"));
+          const col = parseInt(selectedCell.getAttribute("data-col"));
 
-            if (fixedCells[row][col]) return;
+          if (fixedCells[row][col]) return;
 
-            const number = parseInt(btn.getAttribute("data-number"));
+          // Check if key is a number between 1-9
+          if (e.key >= "1" && e.key <= "9") {
+            const number = parseInt(e.key);
 
-            if (number === 0) {
-              board[row][col] = 0;
-              selectedCell.textContent = "";
-              selectedCell.classList.remove("error");
+            board[row][col] = number;
+            selectedCell.textContent = number;
+
+            if (!isValidPlacement(row, col, number)) {
+              selectedCell.classList.add("error");
             } else {
-              board[row][col] = number;
-              selectedCell.textContent = number;
-
-              if (!isValidPlacement(row, col, number)) {
-                selectedCell.classList.add("error");
-              } else {
-                selectedCell.classList.remove("error");
-              }
+              selectedCell.classList.remove("error");
             }
 
             if (isBoardComplete()) {
@@ -432,7 +550,13 @@
                 endGame(true);
               }
             }
-          });
+          }
+          // Handle backspace or delete to clear cell
+          else if (e.key === "Backspace" || e.key === "Delete") {
+            board[row][col] = 0;
+            selectedCell.textContent = "";
+            selectedCell.classList.remove("error");
+          }
         });
       }
 
@@ -478,9 +602,14 @@
         }
 
         updateBoardUI();
-        startTimer();
 
-        gameStarted = true;
+        // Don't start timer automatically
+        // Timer will be started when user clicks "Start Game" button
+
+        // Add a start game button to the game controls
+        // Update the start game button
+        startGameBtn.textContent = "Start Game";
+        startGameBtn.disabled = false;
       }
 
       function generateSolvedBoard() {
@@ -632,7 +761,18 @@
         timerDisplay.textContent = "00:00";
         gameStarted = false;
         gameWon = false;
-        saveScoreBtn.disabled = true;
+
+        // Hide any active popups
+        hideGameCompletionPopup();
+        hideCheckSolutionPopup();
+
+        // Re-enable the check solution button
+        checkBtn.disabled = false;
+
+        // Reset the start game button if it exists
+        // Direct access
+        startGameBtn.textContent = "Start Game";
+        startGameBtn.disabled = false;
       }
 
       function isBoardComplete() {
@@ -699,25 +839,69 @@
         }
       }
 
+      function confirmCheckSolution() {
+        if (!gameStarted) return;
+
+        showCheckSolutionPopup();
+      }
+
+      function showSolution() {
+        // End the game without recording score
+        clearInterval(timerInterval);
+        gameStarted = false;
+
+        // Show the solution
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            board[row][col] = solution[row][col];
+          }
+        }
+
+        updateBoardUI();
+
+        // Change Start Game button text to Restart Game
+        startGameBtn.textContent = "Restart New Game";
+        startGameBtn.disabled = false;
+        // Disable the check solution button until a new game is started
+        checkBtn.disabled = true;
+      }
+
       function endGame(won) {
         clearInterval(timerInterval);
         gameStarted = false;
         gameWon = won;
 
         if (won) {
-          alert(
-            `Congratulations! You solved the puzzle in ${formatTime(timer)}!`
-          );
-          saveScoreBtn.disabled = false;
+          // Show the game completion popup
+          completionTimeDisplay.textContent = formatTime(timer);
+          showGameCompletionPopup();
+
+          // Disable the check solution button until a new game is started
+          checkBtn.disabled = true;
         }
       }
 
+      function showGameCompletionPopup() {
+        gameCompletionPopup.classList.add("active");
+        popupSaveScoreBtn.disabled = false;
+      }
+
+      function hideGameCompletionPopup() {
+        gameCompletionPopup.classList.remove("active");
+      }
+
+      function showCheckSolutionPopup() {
+        checkSolutionPopup.classList.add("active");
+      }
+
+      function hideCheckSolutionPopup() {
+        checkSolutionPopup.classList.remove("active");
+      }
+
       function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60)
-          .toString()
-          .padStart(2, "0");
-        const secs = (seconds % 60).toString().padStart(2, "0");
-        return `${minutes}:${seconds}`;
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs.toString().padStart(2, "0")}`;
       }
 
       function saveScore() {
@@ -726,39 +910,90 @@
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        const username = currentUser.username;
-        const formattedTime = formatTime(timer);
-
-        const bestTimeKey = `sudoku_besttime_${username}`;
-        const currentBestTime = localStorage.getItem(bestTimeKey);
-
-        if (!currentBestTime || timer < parseTimeToSeconds(currentBestTime)) {
-          localStorage.setItem(bestTimeKey, formattedTime);
-          alert(`New best time: ${formattedTime}!`);
-        } else {
-          alert(
-            `Time saved: ${formattedTime}. Your best time is ${currentBestTime}.`
-          );
-        }
-
-        addToLeaderboard("sudoku", timer, difficulty);
-
-        saveScoreBtn.disabled = true;
-      }
-
-      function parseTimeToSeconds(timeStr) {
-        const [minutes, seconds] = timeStr.split(":").map(Number);
-        return minutes * 60 + seconds;
+        // Call the API to save the score
+        saveHighScore("sudoku", timer, true, { difficultyLevel: difficulty })
+          .then((success) => {
+            if (success) {
+              console.log("Score saved successfully");
+            } else {
+              console.error("Failed to save score");
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving score:", error);
+          });
       }
 
       function toggleLeaderboard() {
         if (leaderboardDiv.style.display === "none") {
           leaderboardDiv.style.display = "block";
           showLeaderboardBtn.textContent = "Hide Leaderboard";
-          displayLeaderboard("sudoku");
+          fetchSudokuLeaderboard();
         } else {
           leaderboardDiv.style.display = "none";
           showLeaderboardBtn.textContent = "Show Leaderboard";
+        }
+      }
+
+      async function fetchSudokuLeaderboard() {
+        const leaderboardBody = document.getElementById("leaderboard-body");
+        if (!leaderboardBody) return;
+
+        // Clear existing entries
+        leaderboardBody.innerHTML = "";
+
+        try {
+          // Fetch leaderboard from backend API
+          const response = await fetch(
+            `${window.API_URL}/sessions/leaderboard/sudoku`,
+            {
+              headers: {
+                Authorization: `Bearer ${getAuthToken()}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch leaderboard");
+          }
+
+          const leaderboardData = await response.json();
+
+          // If leaderboard is empty
+          if (leaderboardData.length === 0) {
+            const emptyRow = document.createElement("tr");
+            emptyRow.innerHTML = `<td colspan="4">No scores yet. Be the first to set a record!</td>`;
+            leaderboardBody.appendChild(emptyRow);
+            return;
+          }
+
+          // Get current user for highlighting
+          const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+          // Create rows for each entry
+          leaderboardData.forEach((entry, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${entry.Username}</td>
+              <td>${formatTime(entry.Score)}</td>
+              <td>${entry.Difficulty || "easy"}</td>
+            `;
+
+            // Highlight current user's score
+            if (currentUser && entry.Username === currentUser.username) {
+              row.style.backgroundColor = "rgba(0, 255, 204, 0.1)";
+            }
+
+            leaderboardBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error("Error fetching sudoku leaderboard:", error);
+          // Display error message in leaderboard
+          const errorRow = document.createElement("tr");
+          errorRow.innerHTML = `<td colspan="4">Error loading leaderboard. Please try again later.</td>`;
+          leaderboardBody.appendChild(errorRow);
         }
       }
     </script>

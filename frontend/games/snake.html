@@ -9,20 +9,6 @@
     <link rel="stylesheet" href="../css/components/footer.css" />
     <script src="https://unpkg.com/feather-icons"></script>
     <style>
-      .game-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-      }
-
-      .game-header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-      }
-
       .game-controls {
         display: flex;
         gap: 10px;
@@ -168,59 +154,55 @@
       </header>
 
       <div class="game-container">
-        <div class="game-header">
-          <a href="../dashboard.html" class="btn btn-secondary">
-            <i data-feather="arrow-left"></i> Back to Dashboard
+          <a href="../dashboard.html" class="back-to-dashboard">
+            Back to Dashboard
           </a>
-          <h1>Snake Game</h1>
-          <div></div>
-          <!-- Empty div for flex alignment -->
-        </div>
+            <h1 class="game-title">Snake Game</h1>
 
-        <div class="score-display">
-          Score: <span id="current-score">0</span> | High Score:
-          <span id="high-score">0</span>
-        </div>
+          <div class="score-display">
+            Score: <span id="current-score">0</span> | High Score:
+            <span id="high-score">0</span>
+          </div>
 
-        <div class="game-controls">
-          <button id="start-btn" class="btn btn-primary">Start New Game</button>
-          <button id="show-leaderboard-btn" class="btn btn-secondary">
-            Show Leaderboard
-          </button>
-        </div>
+          <div class="game-controls">
+            <button id="start-btn" class="btn btn-primary">
+              Start New Game
+            </button>
+            <button id="show-leaderboard-btn" class="btn btn-secondary">
+              Show Leaderboard
+            </button>
+          </div>
 
-        <canvas id="game-canvas" width="400" height="400"></canvas>
+          <canvas id="game-canvas" width="400" height="400"></canvas>
 
-        <div class="game-instructions">
-          <h3>How to Play:</h3>
-          <p>
-            Use the arrow keys to control the snake. Eat the red apples to grow
-            longer and increase your score. Avoid hitting the walls and
-            yourself!
-          </p>
-          <p>
-            <strong>Controls:</strong> Arrow keys (↑ ↓ ← →) or WASD to move the
-            snake
-          </p>
-        </div>
+          <div class="game-instructions">
+            <h3>How to Play:</h3>
+            <p>
+              Use the arrow keys to control the snake. Eat the red apples to
+              grow longer and increase your score. Avoid hitting the walls and
+              yourself!
+            </p>
+            <p>
+              <strong>Controls:</strong> Arrow keys (↑ ↓ ← →) or WASD to move
+              the snake
+            </p>
+          </div>
 
-        <div class="leaderboard" id="leaderboard" style="display: none">
-          <h2>Leaderboard</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>Score</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here -->
-            </tbody>
-          </table>
+          <div class="leaderboard" id="leaderboard" style="display: none">
+            <h2>Leaderboard</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Player</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-
       <footer class="footer">
         <div class="footer-content">
           <div class="footer-logo-title">
@@ -416,7 +398,7 @@
 
         initGame();
         gameRunning = true;
-        startBtn.textContent = "Restart Game";
+        startBtn.textContent = "Restart New Game";
 
         gameLoop = setInterval(gameStep, 150);
       }

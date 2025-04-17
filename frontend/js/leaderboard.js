@@ -3,9 +3,6 @@
  * Handles game leaderboards using backend API
  */
 
-// API base URL
-const LEADERBOARD_API_URL = "http://localhost:5000/api";
-
 // Get auth token from localStorage
 function getAuthToken() {
   return localStorage.getItem("token");
@@ -42,7 +39,7 @@ async function displayLeaderboard(game) {
   try {
     // Fetch leaderboard from backend API
     const response = await fetch(
-      `${LEADERBOARD_API_URL}/sessions/leaderboard/${game}`,
+      `${window.API_URL}/sessions/leaderboard/${game}`,
       {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -77,13 +74,30 @@ async function displayLeaderboard(game) {
       // Format time-based scores (sudoku, memorymatch)
       if (game === "sudoku" || game === "memorymatch") {
         displayScore = formatTime(displayScore);
-
-        row.innerHTML = `
+        if (game === "memorymatch") {
+          row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${entry.Username}</td>
+                    <td>${displayScore}</td>
+                    <td>${entry.Moves || 0}</td>
+                    <td>${entry.Difficulty || "normal"}</td>
+                `;
+        } else {
+          row.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${entry.Username}</td>
                     <td>${displayScore}</td>
                     <td>${entry.Difficulty || "normal"}</td>
                 `;
+        }
+      } else if (game === "whackamole") {
+        row.innerHTML = `
+    <td>${index + 1}</td>
+    <td>${entry.Username}</td>
+    <td>${displayScore}</td>
+    <td>${entry.Moles_Whacked || 0}</td>
+    <td>${entry.Difficulty || "easy"}</td>
+  `;
       } else {
         row.innerHTML = `
                     <td>${index + 1}</td>

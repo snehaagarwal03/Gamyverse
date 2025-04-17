@@ -12,7 +12,6 @@
   </head>
   <body>
     <div class="gradient-background">
-
       <header class="header">
         <div class="logo">
           <a href="dashboard.html">
@@ -23,7 +22,7 @@
         <div class="user-profile">
           <div class="dropdown">
             <button class="dropdown-toggle">
-              <i data-feather="user"></i>
+              <span class="icon-circle"><i data-feather="user"></i></span>
               <span id="username-display">User</span>
             </button>
             <div class="dropdown-menu">
@@ -35,17 +34,20 @@
       </header>
 
       <div class="dashboard-container">
-
         <aside class="sidebar">
           <nav>
             <ul>
-              <li class="active">
-                <a href="dashboard.html"
-                  ><i data-feather="home"></i> Dashboard</a
-                >
-              </li>
               <li>
-                <a href="profile.html"><i data-feather="user"></i> Profile</a>
+                <a href="dashboard.html" class="sidebar-link">
+                  <span class="icon-circle"><i data-feather="home"></i></span>
+                  <span class="sidebar-text">Dashboard</span>
+                </a>
+              </li>
+              <li class="active">
+                <a href="profile.html" class="sidebar-link">
+                  <span class="icon-circle"><i data-feather="user"></i></span>
+                  <span class="sidebar-text">Profile</span>
+                </a>
               </li>
             </ul>
           </nav>

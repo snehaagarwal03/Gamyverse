@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/components/header.css" />
     <link rel="stylesheet" href="css/components/footer.css" />
+    <link rel="stylesheet" href="css/components/landing.css" />
     <link rel="stylesheet" href="css/components/cards.css" />
     <script src="https://unpkg.com/feather-icons"></script>
   </head>
@@ -25,73 +26,76 @@
         </div>
       </header>
 
-      <section class="hero">
-        <div class="hero-content">
-          <h1>Welcome to Gamyverse</h1>
-          <p>
-            Discover the ultimate gaming universe with our collection of classic
-            and fun games
-          </p>
-          <a href="login.html" class="btn btn-cta">Let's Get Started</a>
+      <div class="main-content-with-blobs">
+        <div class="main-background-blobs">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
         </div>
         <div class="hero-overlay"></div>
-      </section>
 
-      <section class="games-showcase">
-        <h2>Our Games Collection</h2>
-        <div class="game-cards">
-          <div class="game-card" data-game="snake">
-            <div class="card-content">
-              <i data-feather="zap"></i>
-              <h3>Snake</h3>
-              <p>
-                Control a snake to eat apples and grow longer without hitting
-                walls or yourself.
-              </p>
+        <section class="landing-main">
+          <div class="hero-content">
+            <h1 class="game-title">Welcome to Gamyverse</h1>
+            <p>
+              Discover the ultimate gaming universe with our collection of
+              classic and fun games
+            </p>
+          </div>
+
+          <div class="game-cards">
+            <div class="game-card" data-game="snake">
+              <div class="card-content">
+                <i data-feather="zap"></i>
+                <h3>Snake</h3>
+                <p>
+                  Control a snake to eat apples and grow longer without hitting
+                  walls or yourself.
+                </p>
+              </div>
+            </div>
+            <div class="game-card" data-game="sudoku">
+              <div class="card-content">
+                <i data-feather="grid"></i>
+                <h3>Sudoku</h3>
+                <p>
+                  Test your logical thinking by filling a 9×9 grid with numbers
+                  according to specific rules.
+                </p>
+              </div>
+            </div>
+            <div class="game-card" data-game="whackamole">
+              <div class="card-content">
+                <i data-feather="target"></i>
+                <h3>Whack-a-Mole</h3>
+                <p>
+                  A classic arcade game where you whack as many moles as
+                  possible in limited time.
+                </p>
+              </div>
+            </div>
+            <div class="game-card" data-game="2048">
+              <div class="card-content">
+                <i data-feather="layers"></i>
+                <h3>2048</h3>
+                <p>
+                  Combine matching tiles to create the elusive 2048 tile in this
+                  addictive puzzle game.
+                </p>
+              </div>
+            </div>
+            <div class="game-card" data-game="memorymatch">
+              <div class="card-content">
+                <i data-feather="copy"></i>
+                <h3>Memory Match</h3>
+                <p>
+                  Test your memory by matching pairs of cards in this classic
+                  concentration game.
+                </p>
+              </div>
             </div>
           </div>
-          <div class="game-card" data-game="sudoku">
-            <div class="card-content">
-              <i data-feather="grid"></i>
-              <h3>Sudoku</h3>
-              <p>
-                Test your logical thinking by filling a 9×9 grid with numbers
-                according to specific rules.
-              </p>
-            </div>
-          </div>
-          <div class="game-card" data-game="whackamole">
-            <div class="card-content">
-              <i data-feather="target"></i>
-              <h3>Whack-a-Mole</h3>
-              <p>
-                A classic arcade game where you whack as many moles as possible
-                in limited time.
-              </p>
-            </div>
-          </div>
-          <div class="game-card" data-game="2048">
-            <div class="card-content">
-              <i data-feather="layers"></i>
-              <h3>2048</h3>
-              <p>
-                Combine matching tiles to create the elusive 2048 tile in this
-                addictive puzzle game.
-              </p>
-            </div>
-          </div>
-          <div class="game-card" data-game="memorymatch">
-            <div class="card-content">
-              <i data-feather="copy"></i>
-              <h3>Memory Match</h3>
-              <p>
-                Test your memory by matching pairs of cards in this classic
-                concentration game.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <footer class="footer">
         <div class="footer-content">

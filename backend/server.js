@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const { testConnection } = require('./db');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const { testConnection } = require("./db");
+require("dotenv").config();
 
 // Import routes
-const userRoutes = require('./routes/userRoutes');
-const sessionRoutes = require('./routes/sessionRoutes');
+const userRoutes = require("./routes/userRoutes");
+const sessionRoutes = require("./routes/sessionRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,15 +19,19 @@ app.use(express.urlencoded({ extended: true }));
 testConnection();
 
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/sessions', sessionRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 // Default route
-app.get('/', (req, res) => {
-  res.send('GamyVerse API is running');
+app.get("/", (req, res) => {
+  res.send("GamyVerse API is running");
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+app.use("*", (req, res) => {
+  res.status(404).send("API endpoint not found");
 });
