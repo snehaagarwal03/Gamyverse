@@ -293,9 +293,7 @@
           </div>
         </div>
 
-        <div class="memory-grid" id="memory-grid">
-          <!-- Cards will be generated dynamically -->
-        </div>
+        <div class="memory-grid" id="memory-grid"></div>
 
         <div class="game-instructions">
           <h3>How to Play:</h3>
@@ -321,14 +319,11 @@
                 <th>Difficulty</th>
               </tr>
             </thead>
-            <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here -->
-            </tbody>
+            <tbody id="leaderboard-body"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Game Over Modal -->
       <div class="game-over-modal" id="game-over-modal">
         <div class="modal-content">
           <h2>Congratulations!</h2>
@@ -383,22 +378,16 @@
     <script src="../js/games.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
-      // Initialize Feather icons
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
-        // Check if user is logged in
         checkAuthStatus();
-
-        // Update best time display
         updateBestTime();
       });
 
-      // Game variables
       let cards = [];
       let flippedCards = [];
       let matchedPairs = 0;
-      let totalPairs = 8; // Default to easy
+      let totalPairs = 8;
       let moves = 0;
       let gameStarted = false;
       let gameTimer;
@@ -406,7 +395,6 @@
       let canFlip = false;
       let currentDifficulty = "Easy (8 pairs)";
 
-      // Card icons (Feather icons) - ensure we have enough for hardest difficulty
       const cardIcons = [
         "heart",
         "star",
@@ -433,7 +421,6 @@
         "map",
       ];
 
-      // DOM elements
       const memoryGrid = document.getElementById("memory-grid");
       const newGameBtn = document.getElementById("new-game-btn");
       const showLeaderboardBtn = document.getElementById(
@@ -452,7 +439,6 @@
       const playAgainBtn = document.getElementById("play-again-btn");
       const modalSaveScoreBtn = document.getElementById("modal-save-score-btn");
 
-      // Event listeners
       newGameBtn.addEventListener("click", startNewGame);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
       playAgainBtn.addEventListener("click", () => {
@@ -463,8 +449,6 @@
         modalSaveScoreBtn.disabled = true;
       });
 
-      // Add click event to difficulty buttons
-      // Add click event to difficulty buttons
       difficultyBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
           if (gameStarted) {
@@ -475,8 +459,6 @@
             ) {
               return;
             }
-
-            // If a game is in progress, stop the timer
             clearInterval(gameTimer);
             gameStarted = false;
           }
@@ -487,45 +469,37 @@
           totalPairsDisplay.textContent = totalPairs;
           currentDifficulty = btn.textContent;
 
-          // Reset the grid without starting the game
           flippedCards = [];
           matchedPairs = 0;
           moves = 0;
           seconds = 0;
-          canFlip = false; // Keep cards unflippable until New Game is clicked
+          canFlip = false;
 
-          // Update displays
           pairsFoundDisplay.textContent = "0";
           movesDisplay.textContent = "0";
           timeDisplay.textContent = "00:00";
 
-          // Initialize the grid without starting the game
           initializeGrid();
         });
       });
-      // Initialize game for the first time
+
       initializeGrid();
 
-      // Initialize grid
       function initializeGrid() {
         memoryGrid.innerHTML = "";
         cards = [];
 
-        // Calculate grid layout based on total pairs
         let cols;
         if (totalPairs <= 8) cols = 4;
         else if (totalPairs <= 10) cols = 5;
         else cols = 6;
 
-        // Update grid columns
         memoryGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
-        // Create cards
         const selectedIcons = shuffleArray(cardIcons).slice(0, totalPairs);
         const cardPairs = [...selectedIcons, ...selectedIcons];
         cards = shuffleArray(cardPairs);
 
-        // Clear grid and create new cards
         memoryGrid.innerHTML = "";
 
         cards.forEach((icon, index) => {
@@ -549,20 +523,17 @@
           memoryGrid.appendChild(card);
         });
 
-        // Initialize Feather icons for cards
         feather.replace();
       }
 
-      // Start new game
       function startNewGame() {
-        // Reset game state
         flippedCards = [];
         matchedPairs = 0;
         moves = 0;
         seconds = 0;
 
         if (gameTimer) clearInterval(gameTimer);
-        // Update displays
+
         pairsFoundDisplay.textContent = moves;
         movesDisplay.textContent = matchedPairs;
         timeDisplay.textContent = "00:00";
@@ -572,14 +543,12 @@
           newGameBtn.classList.remove("btn-active");
         }, 200);
 
-        // Create new game
         initializeGrid();
         startTimer();
         canFlip = true;
         gameStarted = true;
       }
 
-      // Start timer
       function startTimer() {
         gameTimer = setInterval(() => {
           seconds++;
@@ -591,9 +560,7 @@
         }, 1000);
       }
 
-      // Flip a card
       function flipCard(card, index) {
-        // Return if card is already flipped or matched, or if can't flip
         if (
           !canFlip ||
           card.classList.contains("flipped") ||
@@ -602,15 +569,9 @@
           return;
         }
 
-        // Start the timer on first card flip if game hasn't started yet
-
-        // Flip the card
         card.classList.add("flipped");
-
-        // Add to flipped cards
         flippedCards.push({ card, index });
 
-        // If we have 2 flipped cards, check for a match
         if (flippedCards.length === 2) {
           moves++;
           movesDisplay.textContent = moves;
@@ -623,94 +584,68 @@
         }
       }
 
-      // Check if the two flipped cards match
       function checkForMatch() {
         const [card1, card2] = flippedCards;
 
-        // If icons match
         if (cards[card1.index] === cards[card2.index]) {
-          // Mark as matched
           card1.card.classList.add("matched");
           card2.card.classList.add("matched");
-
-          // Increment matched pairs
           matchedPairs++;
           pairsFoundDisplay.textContent = matchedPairs;
 
-          // Check if game is complete
           if (matchedPairs === totalPairs) {
             endGame();
           }
         } else {
-          // Flip cards back
           card1.card.classList.remove("flipped");
           card2.card.classList.remove("flipped");
         }
 
-        // Clear flipped cards
         flippedCards = [];
       }
 
-      // End game
       function endGame() {
-        // Stop timer
         clearInterval(gameTimer);
         gameStarted = false;
 
-        // Format final time
         const minutes = Math.floor(seconds / 60)
           .toString()
           .padStart(2, "0");
         const secs = (seconds % 60).toString().padStart(2, "0");
         const finalTime = `${minutes}:${secs}`;
 
-        // Update final displays
         finalTimeDisplay.textContent = finalTime;
         finalMovesDisplay.textContent = moves;
 
-        // Check if this is a new best time and update UI immediately for feedback
         const currentHighScore = timeToSeconds(bestTimeDisplay.textContent);
         if (currentHighScore === 0 || seconds < currentHighScore) {
           bestTimeDisplay.textContent = finalTime;
         }
 
-        // Also fetch from server to ensure we have the latest data
         updateBestTime();
-
-        // Enable the modal save score button
         modalSaveScoreBtn.disabled = false;
         modalSaveScoreBtn.textContent = "Save Score";
-
-        // Show game over modal
         showModal();
       }
-      // Save score
-      // Save score
+
       function saveScore() {
         if (matchedPairs !== totalPairs) return;
-
-        // Disable save button immediately to prevent multiple clicks
         modalSaveScoreBtn.disabled = false;
 
         let difficultyLevel = "easy";
         if (totalPairs === 8) difficultyLevel = "easy";
         else if (totalPairs === 10) difficultyLevel = "medium";
         else if (totalPairs >= 12) difficultyLevel = "hard";
-        // Save score using API
+
         saveHighScore("memorymatch", seconds, true, {
           moves: moves,
           difficultyLevel: difficultyLevel,
         })
           .then((success) => {
             if (success) {
-              // Update UI to show success
               modalSaveScoreBtn.textContent = "Score Saved!";
-              modalSaveScoreBtn.disabled = true; // Keep it disabled
-
-              // Update best time display
+              modalSaveScoreBtn.disabled = true;
               updateBestTime();
-
-              // Update leaderboard if it's visible
               if (leaderboardDiv.style.display === "block") {
                 toggleLeaderboard();
                 toggleLeaderboard();
@@ -735,13 +670,10 @@
           });
       }
 
-      // Update best time display
-      // Update best time display
       function updateBestTime() {
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        // Fetch best time from API instead of localStorage
         fetch(`${window.API_URL}/sessions/stats`, {
           headers: {
             Authorization: `Bearer ${getAuthToken()}`,
@@ -755,7 +687,6 @@
           })
           .then((data) => {
             if (data.bestScores && data.bestScores.best_memorymatch_time) {
-              // Convert seconds to MM:SS format for display
               const bestTimeSeconds = data.bestScores.best_memorymatch_time;
               const minutes = Math.floor(bestTimeSeconds / 60)
                 .toString()
@@ -772,15 +703,12 @@
           });
       }
 
-      // Toggle leaderboard visibility
-      // Toggle leaderboard visibility
       function toggleLeaderboard() {
         if (leaderboardDiv.style.display === "none") {
           leaderboardDiv.style.display = "block";
           showLeaderboardBtn.textContent = "Hide Leaderboard";
 
           try {
-            // Use the existing displayLeaderboard function from leaderboard.js
             displayLeaderboard("memorymatch");
           } catch (error) {
             console.error("Error loading leaderboard:", error);
@@ -795,12 +723,10 @@
         }
       }
 
-      // Show game over modal
       function showModal() {
         gameOverModal.classList.add("active");
       }
 
-      // Close game over modal
       function closeModal() {
         gameOverModal.classList.remove("active");
         canFlip = false;
@@ -813,13 +739,11 @@
         initializeGrid();
       }
 
-      // Convert time string to seconds
       function timeToSeconds(timeStr) {
         const [minutes, seconds] = timeStr.split(":").map(Number);
         return minutes * 60 + seconds;
       }
 
-      // Shuffle array
       function shuffleArray(array) {
         const newArray = [...array];
         for (let i = newArray.length - 1; i > 0; i--) {

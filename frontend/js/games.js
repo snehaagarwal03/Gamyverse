@@ -1,22 +1,12 @@
-/**
- * Games Module for Gamyverse
- * Handles game score management and dashboard updates using backend API
- */
-
-// API base URL
-
-// Get auth token from localStorage
 function getAuthToken() {
   return localStorage.getItem("token");
 }
 
-// Update high scores for the dashboard
 async function updateHighScores() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (!currentUser || !getAuthToken()) return;
 
   try {
-    // Fetch user stats from backend API
     const response = await fetch(`${window.API_URL}/sessions/stats`, {
       headers: {
         Authorization: `Bearer ${getAuthToken()}`,
@@ -29,7 +19,6 @@ async function updateHighScores() {
 
     const data = await response.json();
 
-    // Update high score displays on dashboard
     updateElementText(
       "snake-highscore",
       data.bestScores.best_snake_score || "0"
@@ -52,14 +41,12 @@ async function updateHighScores() {
       data.bestScores.best_pacman_score || "0"
     );
 
-    // Update total games count if element exists
     updateElementText("total-games", data.totalGames || "0");
   } catch (error) {
     console.error("Error updating high scores:", error);
   }
 }
 
-// Helper function to update text content of an element if it exists
 function updateElementText(id, text) {
   const element = document.getElementById(id);
   if (element) {
@@ -67,30 +54,22 @@ function updateElementText(id, text) {
   }
 }
 
-// Save high score for a game to backend
 async function saveHighScore(game, score, isTime = false, extraData = {}) {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (!currentUser || !getAuthToken()) return false;
 
   try {
-    // Prepare data to send
     let gameData = {};
 
-    // For time-based games (formatted as MM:SS)
     if (isTime) {
-      // Convert time to seconds if it's in MM:SS format
       const seconds = typeof score === "string" ? timeToSeconds(score) : score;
       gameData.duration = seconds;
-    }
-    // For point-based scores
-    else {
+    } else {
       gameData.score = score;
     }
 
-    // Add any extra data (like difficulty, moves, etc.)
     gameData = { ...gameData, ...extraData };
 
-    // Map game name to appropriate endpoint
     let endpoint;
     switch (game) {
       case "sudoku":
@@ -115,7 +94,6 @@ async function saveHighScore(game, score, isTime = false, extraData = {}) {
         throw new Error("Invalid game specified");
     }
 
-    // Send data to backend
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -136,21 +114,16 @@ async function saveHighScore(game, score, isTime = false, extraData = {}) {
   }
 }
 
-// Compare two time strings (format: MM:SS)
 function compareTime(time1, time2) {
-  // If either time is in '--:--' format, treat as infinity
   if (time1 === "--:--") return false;
   if (time2 === "--:--") return true;
 
-  // Convert time strings to seconds
   const seconds1 = timeToSeconds(time1);
   const seconds2 = timeToSeconds(time2);
 
-  // Lower time is better
   return seconds1 < seconds2;
 }
 
-// Convert time string (MM:SS) to seconds
 function timeToSeconds(timeStr) {
   if (!timeStr || timeStr === "--:--") return Infinity;
 
@@ -158,7 +131,6 @@ function timeToSeconds(timeStr) {
   return minutes * 60 + seconds;
 }
 
-// Format seconds to time string (MM:SS)
 function formatTime(totalSeconds) {
   if (!totalSeconds || totalSeconds === null) return "--:--";
 

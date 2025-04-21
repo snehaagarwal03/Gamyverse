@@ -154,7 +154,6 @@
         margin-top: 0;
       }
 
-      /* Game popup styles */
       .game-popup-overlay {
         position: fixed;
         top: 0;
@@ -291,9 +290,7 @@
           </div>
         </div>
 
-        <div class="sudoku-board" id="sudoku-board">
-          <!-- Sudoku cells will be generated here -->
-        </div>
+        <div class="sudoku-board" id="sudoku-board"></div>
 
         <div class="game-instructions">
           <h3>How to Play:</h3>
@@ -318,9 +315,7 @@
                 <th>Difficulty</th>
               </tr>
             </thead>
-            <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here -->
-            </tbody>
+            <tbody id="leaderboard-body"></tbody>
           </table>
         </div>
       </div>
@@ -393,7 +388,6 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
         checkAuthStatus();
       });
 
@@ -423,14 +417,12 @@
       const difficultyDisplay = document.getElementById("difficulty-display");
       const difficultyBtns = document.querySelectorAll(".difficulty-btn");
       const leaderboardDiv = document.getElementById("leaderboard");
-
       const gameCompletionPopup = document.getElementById(
         "game-completion-popup"
       );
       const completionTimeDisplay = document.getElementById("completion-time");
       const popupSaveScoreBtn = document.getElementById("popup-save-score");
       const popupPlayAgainBtn = document.getElementById("popup-play-again");
-
       const checkSolutionPopup = document.getElementById(
         "check-solution-popup"
       );
@@ -438,26 +430,19 @@
       const showSolutionNoBtn = document.getElementById("show-solution-no");
 
       initializeBoard();
-
       generateNewGame();
 
       startGameBtn.addEventListener("click", () => {
         if (!gameStarted && startGameBtn.textContent === "Start Game") {
-          // This is the normal "Start Game" case - starting a fresh game
           startTimer();
           gameStarted = true;
           startGameBtn.textContent = "Restart Game";
           startGameBtn.disabled = true;
-
           difficultyDisplay.textContent =
             difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
         } else {
-          // This handles both:
-          // 1. Clicking "Restart Game" after viewing solution
-          // 2. Clicking "Restart Game" during active gameplay
           resetGame();
           generateNewGame();
-          // Make sure check button is re-enabled
           checkBtn.disabled = false;
         }
       });
@@ -465,10 +450,8 @@
       checkBtn.addEventListener("click", confirmCheckSolution);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
 
-      // Popup button event listeners
       popupSaveScoreBtn.addEventListener("click", () => {
         saveScore();
-        // Flash a success message
         popupSaveScoreBtn.textContent = "Score Saved!";
         popupSaveScoreBtn.disabled = true;
         setTimeout(() => {
@@ -523,7 +506,6 @@
           }
         }
 
-        // Add keyboard event listener to the document
         document.addEventListener("keydown", (e) => {
           if (!selectedCell || !gameStarted) return;
 
@@ -532,10 +514,8 @@
 
           if (fixedCells[row][col]) return;
 
-          // Check if key is a number between 1-9
           if (e.key >= "1" && e.key <= "9") {
             const number = parseInt(e.key);
-
             board[row][col] = number;
             selectedCell.textContent = number;
 
@@ -550,9 +530,7 @@
                 endGame(true);
               }
             }
-          }
-          // Handle backspace or delete to clear cell
-          else if (e.key === "Backspace" || e.key === "Delete") {
+          } else if (e.key === "Backspace" || e.key === "Delete") {
             board[row][col] = 0;
             selectedCell.textContent = "";
             selectedCell.classList.remove("error");
@@ -602,12 +580,6 @@
         }
 
         updateBoardUI();
-
-        // Don't start timer automatically
-        // Timer will be started when user clicks "Start Game" button
-
-        // Add a start game button to the game controls
-        // Update the start game button
         startGameBtn.textContent = "Start Game";
         startGameBtn.disabled = false;
       }
@@ -632,7 +604,6 @@
       function fillBox(startRow, startCol) {
         let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         nums = shuffleArray(nums);
-
         let index = 0;
         for (let row = 0; row < 3; row++) {
           for (let col = 0; col < 3; col++) {
@@ -657,7 +628,6 @@
             for (let num = 1; num <= 9; num++) {
               if (isValidPlacement(row, col, num)) {
                 board[row][col] = num;
-
                 if (solveSudoku()) {
                   return true;
                 }
@@ -705,7 +675,6 @@
         cells.forEach((cell) => {
           const row = parseInt(cell.getAttribute("data-row"));
           const col = parseInt(cell.getAttribute("data-col"));
-
           cell.textContent = "";
           cell.classList.remove("fixed");
           cell.classList.remove("selected");
@@ -727,7 +696,6 @@
         if (timerInterval) {
           clearInterval(timerInterval);
         }
-
         timer = 0;
         timerDisplay.textContent = "00:00";
 
@@ -762,15 +730,10 @@
         gameStarted = false;
         gameWon = false;
 
-        // Hide any active popups
         hideGameCompletionPopup();
         hideCheckSolutionPopup();
 
-        // Re-enable the check solution button
         checkBtn.disabled = false;
-
-        // Reset the start game button if it exists
-        // Direct access
         startGameBtn.textContent = "Start Game";
         startGameBtn.disabled = false;
       }
@@ -846,11 +809,9 @@
       }
 
       function showSolution() {
-        // End the game without recording score
         clearInterval(timerInterval);
         gameStarted = false;
 
-        // Show the solution
         for (let row = 0; row < 9; row++) {
           for (let col = 0; col < 9; col++) {
             board[row][col] = solution[row][col];
@@ -858,11 +819,8 @@
         }
 
         updateBoardUI();
-
-        // Change Start Game button text to Restart Game
         startGameBtn.textContent = "Restart New Game";
         startGameBtn.disabled = false;
-        // Disable the check solution button until a new game is started
         checkBtn.disabled = true;
       }
 
@@ -872,11 +830,8 @@
         gameWon = won;
 
         if (won) {
-          // Show the game completion popup
           completionTimeDisplay.textContent = formatTime(timer);
           showGameCompletionPopup();
-
-          // Disable the check solution button until a new game is started
           checkBtn.disabled = true;
         }
       }
@@ -910,7 +865,6 @@
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        // Call the API to save the score
         saveHighScore("sudoku", timer, true, { difficultyLevel: difficulty })
           .then((success) => {
             if (success) {
@@ -939,11 +893,9 @@
         const leaderboardBody = document.getElementById("leaderboard-body");
         if (!leaderboardBody) return;
 
-        // Clear existing entries
         leaderboardBody.innerHTML = "";
 
         try {
-          // Fetch leaderboard from backend API
           const response = await fetch(
             `${window.API_URL}/sessions/leaderboard/sudoku`,
             {
@@ -959,7 +911,6 @@
 
           const leaderboardData = await response.json();
 
-          // If leaderboard is empty
           if (leaderboardData.length === 0) {
             const emptyRow = document.createElement("tr");
             emptyRow.innerHTML = `<td colspan="4">No scores yet. Be the first to set a record!</td>`;
@@ -967,10 +918,8 @@
             return;
           }
 
-          // Get current user for highlighting
           const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-          // Create rows for each entry
           leaderboardData.forEach((entry, index) => {
             const row = document.createElement("tr");
 
@@ -981,7 +930,6 @@
               <td>${entry.Difficulty || "easy"}</td>
             `;
 
-            // Highlight current user's score
             if (currentUser && entry.Username === currentUser.username) {
               row.style.backgroundColor = "rgba(0, 255, 204, 0.1)";
             }
@@ -990,7 +938,6 @@
           });
         } catch (error) {
           console.error("Error fetching sudoku leaderboard:", error);
-          // Display error message in leaderboard
           const errorRow = document.createElement("tr");
           errorRow.innerHTML = `<td colspan="4">Error loading leaderboard. Please try again later.</td>`;
           leaderboardBody.appendChild(errorRow);

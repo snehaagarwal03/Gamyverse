@@ -1,19 +1,11 @@
-/**
- * Authentication Module for Gamyverse
- * Handles user registration, login, and session management using JWT tokens and backend API
- */
-
-// API base URL
 window.API_URL = "http://localhost:5000/api";
 
-// Check if user is already logged in
 function checkAuthStatus() {
   const token = localStorage.getItem("token");
   const currentUser = localStorage.getItem("currentUser")
     ? JSON.parse(localStorage.getItem("currentUser"))
     : null;
 
-  // If on login or signup page but already logged in, redirect to dashboard
   if (
     token &&
     currentUser &&
@@ -24,7 +16,6 @@ function checkAuthStatus() {
     return;
   }
 
-  // If on dashboard or game pages but not logged in, redirect to login
   if (
     (!token || !currentUser) &&
     (window.location.pathname.includes("dashboard.html") ||
@@ -37,7 +28,6 @@ function checkAuthStatus() {
     return;
   }
 
-  // Update username display if user is logged in
   if (currentUser) {
     const usernameDisplay = document.getElementById("username-display");
     if (usernameDisplay) {
@@ -46,25 +36,21 @@ function checkAuthStatus() {
   }
 }
 
-// Handle login form submission
 if (document.getElementById("login-form")) {
   document
     .getElementById("login-form")
     .addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      // Get form inputs
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
 
-      // Validate inputs
       if (!username || !password) {
         showError("Please fill in all fields");
         return;
       }
 
       try {
-        // Send login request to API
         const response = await fetch(`${window.API_URL}/users/login`, {
           method: "POST",
           headers: {
@@ -79,7 +65,6 @@ if (document.getElementById("login-form")) {
           throw new Error(data.message || "Login failed");
         }
 
-        // Store token and user info in localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem(
           "currentUser",
@@ -90,7 +75,6 @@ if (document.getElementById("login-form")) {
           })
         );
 
-        // Redirect to dashboard
         window.location.href = "dashboard.html";
       } catch (error) {
         showError(error.message || "Login failed");
@@ -98,14 +82,12 @@ if (document.getElementById("login-form")) {
     });
 }
 
-// Handle signup form submission
 if (document.getElementById("signup-form")) {
   document
     .getElementById("signup-form")
     .addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      // Get form inputs
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
@@ -117,7 +99,6 @@ if (document.getElementById("signup-form")) {
         ? document.getElementById("age").value
         : null;
 
-      // Validate inputs
       if (!username || !email || !password || !confirmPassword) {
         showError("Please fill in all fields");
         return;
@@ -134,7 +115,6 @@ if (document.getElementById("signup-form")) {
       }
 
       try {
-        // Send registration request to API
         const response = await fetch(`${API_URL}/users/register`, {
           method: "POST",
           headers: {
@@ -149,7 +129,6 @@ if (document.getElementById("signup-form")) {
           throw new Error(data.message || "Registration failed");
         }
 
-        // Store token and user info in localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem(
           "currentUser",
@@ -160,7 +139,6 @@ if (document.getElementById("signup-form")) {
           })
         );
 
-        // Redirect to dashboard
         window.location.href = "dashboard.html";
       } catch (error) {
         showError(error.message || "Registration failed");
@@ -168,13 +146,10 @@ if (document.getElementById("signup-form")) {
     });
 }
 
-// Logout functionality
 function logout() {
-  // Remove token and user from localStorage
   localStorage.removeItem("token");
   localStorage.removeItem("currentUser");
 
-  // Redirect to login page
   if (window.location.pathname.includes("/games/")) {
     window.location.href = "../login.html";
   } else {
@@ -182,14 +157,12 @@ function logout() {
   }
 }
 
-// Display error message
 function showError(message) {
   const errorElement = document.getElementById("error-message");
   if (errorElement) {
     errorElement.textContent = message;
     errorElement.style.display = "block";
 
-    // Hide error after 3 seconds
     setTimeout(() => {
       errorElement.style.display = "none";
     }, 3000);
@@ -200,11 +173,9 @@ function getAuthToken() {
   return localStorage.getItem("token");
 }
 
-// Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
   checkAuthStatus();
 
-  // Set up dropdown toggle functionality
   const dropdownToggle = document.querySelector(".dropdown-toggle");
   const dropdownMenu = document.querySelector(".dropdown-menu");
 
@@ -213,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       dropdownMenu.classList.toggle("active");
 
-      // Close dropdown when clicking outside
       document.addEventListener("click", function closeDropdown(e) {
         if (
           !dropdownToggle.contains(e.target) &&

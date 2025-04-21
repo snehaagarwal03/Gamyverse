@@ -157,8 +157,7 @@
           <a href="../dashboard.html" class="back-to-dashboard">
             Back to Dashboard
           </a>
-            <h1 class="game-title">Snake Game</h1>
-
+          <h1 class="game-title">Snake Game</h1>
           <div class="score-display">
             Score: <span id="current-score">0</span> | High Score:
             <span id="high-score">0</span>
@@ -203,6 +202,7 @@
           </div>
         </div>
       </div>
+
       <footer class="footer">
         <div class="footer-content">
           <div class="footer-logo-title">
@@ -229,6 +229,7 @@
             </a>
           </div>
         </div>
+
         <div class="footer-bottom">
           <p>&copy; 2025 Gamyverse. All rights reserved.</p>
         </div>
@@ -240,18 +241,8 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
         checkAuthStatus();
-
         updateSnakeHighScore();
-
-        const logoutBtn = document.getElementById("logout-btn");
-        if (logoutBtn) {
-          logoutBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            logout();
-          });
-        }
       });
 
       const canvas = document.getElementById("game-canvas");
@@ -424,20 +415,16 @@
         saveBtn.classList.remove("btn-error");
 
         modal.querySelector("h2").textContent = "Game Over!";
-
         modal.style.display = "flex";
 
         const playAgainBtn = document.getElementById("play-again-btn");
         const newPlayAgainBtn = playAgainBtn.cloneNode(true);
         playAgainBtn.parentNode.replaceChild(newPlayAgainBtn, playAgainBtn);
-
         const newSaveBtn = saveBtn.cloneNode(true);
         saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
-
         newPlayAgainBtn.addEventListener("click", function () {
           modal.style.display = "none";
         });
-
         newSaveBtn.addEventListener("click", saveScore);
       }
 
@@ -527,10 +514,10 @@
               const row = document.createElement("tr");
 
               row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${entry.Username}</td>
-          <td>${entry.Score}</td>
-        `;
+                <td>${index + 1}</td>
+                <td>${entry.Username}</td>
+                <td>${entry.Score}</td>
+              `;
 
               const currentUser = JSON.parse(
                 localStorage.getItem("currentUser")
@@ -572,7 +559,6 @@
           }
 
           const data = await response.json();
-
           highScoreSpan.textContent = data.bestScores.best_snake_score || "0";
         } catch (error) {
           console.error("Error updating high score:", error);

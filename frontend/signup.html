@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - Gamyverse</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/components/header.css">
-    <link rel="stylesheet" href="css/components/footer.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/components/header.css" />
+    <link rel="stylesheet" href="css/components/footer.css" />
     <script src="https://unpkg.com/feather-icons"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="gradient-background">
-        <header class="header">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="assets/logo.png" alt="Gamyverse Logo">
-                    <span>Gamyverse</span>
-                </a>
-            </div>
-            <div class="nav-buttons">
-                <a href="login.html" class="btn btn-primary">Login</a>
-                <a href="signup.html" class="btn btn-secondary active">Sign Up</a>
-            </div>
-        </header>
+      <header class="header">
+        <div class="logo">
+          <a href="index.html">
+            <img src="assets/logo.png" alt="Gamyverse Logo" />
+            <span>Gamyverse</span>
+          </a>
+        </div>
+        <div class="nav-buttons">
+          <a href="login.html" class="btn btn-primary">Login</a>
+          <a href="signup.html" class="btn btn-secondary active">Sign Up</a>
+        </div>
+      </header>
 
-        <section class="auth-container">
-            <div class="auth-form">
-                <h2>Create an Account</h2>
-                <div id="error-message" class="error-message"></div>
-                <form id="signup-form">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" required minlength="6">
-                    </div>
-                    <button type="submit" class="btn btn-cta">Sign Up</button>
-                </form>
-                <div class="auth-links">
-                    <p>Already have an account? <a href="login.html">Login here</a></p>
-                </div>
+      <section class="auth-container">
+        <div class="auth-form">
+          <h2>Create an Account</h2>
+          <div id="error-message" class="error-message"></div>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" required />
             </div>
-        </section>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                minlength="6"
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                required
+                minlength="6"
+              />
+            </div>
+            <button type="submit" class="btn btn-cta">Sign Up</button>
+          </form>
+          <div class="auth-links">
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+          </div>
+        </div>
+      </section>
 
-         <footer class="footer">
+      <footer class="footer">
         <div class="footer-content">
           <div class="footer-logo-title">
             <span>Gamyverse</span>
@@ -87,9 +99,9 @@
 
     <script src="js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            feather.replace();
-        });
+      document.addEventListener("DOMContentLoaded", () => {
+        feather.replace();
+      });
     </script>
-</body>
+  </body>
 </html>

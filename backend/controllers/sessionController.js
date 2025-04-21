@@ -1,16 +1,12 @@
 const { pool } = require("../db");
 
-// Generic function to insert session data for any game
 const insertGameSession = async (req, res, tableName, fields) => {
   try {
     const userId = req.user.id;
-
-    // Build the SQL query dynamically based on provided fields
     let columns = ["User_Id"];
     let placeholders = ["?"];
     let values = [userId];
 
-    // Add additional fields from request body
     Object.keys(fields).forEach((field) => {
       if (req.body[field] !== undefined) {
         columns.push(fields[field]);
@@ -19,7 +15,6 @@ const insertGameSession = async (req, res, tableName, fields) => {
       }
     });
 
-    // Build and execute the query
     const query = `INSERT INTO ${tableName} (${columns.join(
       ", "
     )}) VALUES (${placeholders.join(", ")})`;
@@ -35,7 +30,6 @@ const insertGameSession = async (req, res, tableName, fields) => {
   }
 };
 
-// Insert Sudoku session
 exports.insertSudokuSession = async (req, res) => {
   const fields = {
     duration: "Duration",
@@ -44,7 +38,6 @@ exports.insertSudokuSession = async (req, res) => {
   return insertGameSession(req, res, "Sudoku_Sessions", fields);
 };
 
-// Insert Snake Game session
 exports.insertSnakeGameSession = async (req, res) => {
   const fields = {
     score: "Score",
@@ -52,7 +45,6 @@ exports.insertSnakeGameSession = async (req, res) => {
   return insertGameSession(req, res, "SnakeGame_Sessions", fields);
 };
 
-// Insert Whack A Mole session
 exports.insertWhackAMoleSession = async (req, res) => {
   const fields = {
     score: "Score",
@@ -62,7 +54,6 @@ exports.insertWhackAMoleSession = async (req, res) => {
   return insertGameSession(req, res, "WhackAMole_Sessions", fields);
 };
 
-// Insert 2048 session
 exports.insert2048Session = async (req, res) => {
   const fields = {
     score: "Score",
@@ -70,7 +61,6 @@ exports.insert2048Session = async (req, res) => {
   return insertGameSession(req, res, "2048_Sessions", fields);
 };
 
-// Insert Memory Match session
 exports.insertMemoryMatchSession = async (req, res) => {
   const fields = {
     score: "Score",
@@ -81,19 +71,14 @@ exports.insertMemoryMatchSession = async (req, res) => {
   return insertGameSession(req, res, "MemoryMatch_Sessions", fields);
 };
 
-// Get leaderboard for a specific game
 exports.getLeaderboard = async (req, res) => {
   try {
     const { game } = req.params;
-
     let query,
       params = [];
 
-    // Determine which game's leaderboard to fetch
     switch (game.toLowerCase()) {
       case "sudoku":
-        // For Sudoku, the lowest duration is best (ascending order)
-        // Also sort by difficulty level when durations are equal (hard > medium > easy)
         query = `
           SELECT u.Username, s.Duration as Score, s.Difficulty_Level as Difficulty
           FROM Sudoku_Sessions s
@@ -115,56 +100,53 @@ exports.getLeaderboard = async (req, res) => {
         break;
 
       case "snake":
-        // For Snake game, the highest score is best (descending order)
         query = `
-        SELECT u.Username, MAX(s.Score) as Score
-    FROM SnakeGame_Sessions s
-    JOIN Users u ON s.User_Id = u.User_Id
-    GROUP BY s.User_Id
-    ORDER BY Score DESC
-    LIMIT 5
-    `;
+          SELECT u.Username, MAX(s.Score) as Score
+          FROM SnakeGame_Sessions s
+          JOIN Users u ON s.User_Id = u.User_Id
+          GROUP BY s.User_Id
+          ORDER BY Score DESC
+          LIMIT 5
+        `;
         break;
+
       case "whackamole":
-        // For Whack A Mole, the highest score is best (descending order)
         query = `
-         SELECT u.Username, s.Score, s.Moles_Whacked, s.Difficulty_Level as Difficulty
-    FROM WhackAMole_Sessions s
-    JOIN Users u ON s.User_Id = u.User_Id
-    WHERE (s.User_Id, s.Score) IN (
-      SELECT User_Id, MAX(Score) as MaxScore
-      FROM WhackAMole_Sessions
-      GROUP BY User_Id
-    )
-    ORDER BY s.Score DESC, 
-      CASE 
-        WHEN s.Difficulty_Level = 'hard' THEN 1
-        WHEN s.Difficulty_Level = 'medium' THEN 2
-        WHEN s.Difficulty_Level = 'easy' THEN 3
-        ELSE 4
-      END ASC
-    LIMIT 5
-  `;
+          SELECT u.Username, s.Score, s.Moles_Whacked, s.Difficulty_Level as Difficulty
+          FROM WhackAMole_Sessions s
+          JOIN Users u ON s.User_Id = u.User_Id
+          WHERE (s.User_Id, s.Score) IN (
+            SELECT User_Id, MAX(Score) as MaxScore
+            FROM WhackAMole_Sessions
+            GROUP BY User_Id
+          )
+          ORDER BY s.Score DESC, 
+            CASE 
+              WHEN s.Difficulty_Level = 'hard' THEN 1
+              WHEN s.Difficulty_Level = 'medium' THEN 2
+              WHEN s.Difficulty_Level = 'easy' THEN 3
+              ELSE 4
+            END ASC
+          LIMIT 5
+        `;
         break;
 
       case "2048":
-        // For 2048, the highest score is best (descending order)
         query = `
-    SELECT u.Username, s.Score
-    FROM \`2048_Sessions\` s
-    JOIN Users u ON s.User_Id = u.User_Id
-    WHERE (s.User_Id, s.Score) IN (
-      SELECT User_Id, MAX(Score) as MaxScore
-      FROM \`2048_Sessions\`
-      GROUP BY User_Id
-    )
-    ORDER BY s.Score DESC
-    LIMIT 5
-  `;
+          SELECT u.Username, s.Score
+          FROM \`2048_Sessions\` s
+          JOIN Users u ON s.User_Id = u.User_Id
+          WHERE (s.User_Id, s.Score) IN (
+            SELECT User_Id, MAX(Score) as MaxScore
+            FROM \`2048_Sessions\`
+            GROUP BY User_Id
+          )
+          ORDER BY s.Score DESC
+          LIMIT 5
+        `;
         break;
 
       case "memorymatch":
-        // For Memory Match, the lowest duration is best (ascending order)
         query = `
           SELECT u.Username, s.Duration as Score, s.Moves, s.Difficulty_Level as Difficulty
           FROM MemoryMatch_Sessions s
@@ -190,7 +172,6 @@ exports.getLeaderboard = async (req, res) => {
         return res.status(400).json({ message: "Invalid game specified" });
     }
 
-    // Execute the query
     const [results] = await pool.execute(query);
 
     res.status(200).json(results);
@@ -200,12 +181,10 @@ exports.getLeaderboard = async (req, res) => {
   }
 };
 
-// Get user stats (total games played across all games)
 exports.getUserStats = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get counts from all game session tables
     const [stats] = await pool.execute(
       `
       SELECT 
@@ -218,7 +197,6 @@ exports.getUserStats = async (req, res) => {
       [userId, userId, userId, userId, userId]
     );
 
-    // Get best scores for each game
     const [bestScores] = await pool.execute(
       `
       SELECT 

@@ -1,5 +1,4 @@
 :root {
-  /* Color Scheme */
   --primary: #4e7ac7;
   --primary-light: #6b95e0;
   --primary-dark: #1e4976;
@@ -7,40 +6,33 @@
   --secondary-dark: #00d6ad;
   --accent: #ff4757;
 
-  /* Background Colors */
   --bg-darkest: #0a1929;
   --bg-dark: #1a2a3a;
   --bg-medium: #2a3e5c;
 
-  /* Text Colors */
   --text-light: #ffffff;
   --text-muted: #a0b1c5;
   --text-dark: #172b45;
 
-  /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
 
-  /* Borders */
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 15px;
 
-  /* Shadows */
   --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.2);
   --shadow-dark: 0 8px 30px rgba(0, 0, 0, 0.3);
 
-  /* Transitions */
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
   --transition-slow: 0.5s ease;
 }
 
-/* Reset and Base Styles */
 *,
 *::before,
 *::after {
@@ -158,7 +150,6 @@ img {
   }
 }
 
-/* Buttons */
 .btn {
   display: inline-block;
   padding: 0.5rem 1.5rem;
@@ -235,7 +226,6 @@ img {
   font-size: 0.875rem;
 }
 
-/* Forms */
 .form-group {
   margin-bottom: var(--spacing-md);
 }
@@ -279,7 +269,6 @@ img {
   display: none;
 }
 
-/* Auth Container */
 .auth-container {
   display: flex;
   justify-content: center;
@@ -308,12 +297,9 @@ img {
   margin-top: var(--spacing-lg);
 }
 
-/* Dashboard Layout */
 .dashboard-container {
   display: flex;
-  min-height: calc(
-    100vh - 60px - 200px
-  ); /* Subtract header and footer heights */
+  min-height: calc(100vh - 60px - 200px);
 }
 
 .sidebar {
@@ -388,7 +374,6 @@ img {
   }
 }
 
-/* 1. Icon Circle Styling (smaller, more subtle gradient) */
 .icon-circle {
   display: inline-flex;
   align-items: center;
@@ -404,7 +389,6 @@ img {
   font-size: 1.15rem;
 }
 
-/* 2. Feather icon inside circle */
 .icon-circle i,
 .icon-circle svg {
   width: 18px;
@@ -413,7 +397,6 @@ img {
   stroke-width: 2px;
 }
 
-/* 3. Sidebar link and dropdown toggle flex styling */
 .sidebar-link,
 .dropdown-toggle {
   display: flex;
@@ -428,7 +411,6 @@ img {
   cursor: pointer;
 }
 
-/* 4. Hover Effects (subtle blue-green gradient, not red/pink) */
 .sidebar-link:hover .icon-circle,
 .dropdown-toggle:hover .icon-circle {
   background: linear-gradient(135deg, #2a5470 0%, #00c6a7 100%);
@@ -441,7 +423,6 @@ img {
   color: #00c6a7;
 }
 
-/* 6. Remove default margin if any */
 .sidebar-link .icon-circle,
 .dropdown-toggle .icon-circle {
   margin-right: 8px !important;
@@ -456,7 +437,6 @@ img {
   padding: var(--spacing-lg);
 }
 
-/* User Profile Dropdown */
 .user-profile {
   position: relative;
 }
@@ -533,7 +513,6 @@ img {
   padding-left: 1.25rem;
 }
 
-/* Profile Page */
 .profile-container {
   max-width: 800px;
   margin: 0 auto;
@@ -754,7 +733,7 @@ main,
 
 .main-content-with-blobs {
   position: relative;
-  min-height: 80vh; /* or whatever fits your content */
+  min-height: 80vh;
   z-index: 1;
 }
 
@@ -806,7 +785,6 @@ main,
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;

@@ -3,19 +3,16 @@ const jwt = require("jsonwebtoken");
 const { pool } = require("../db");
 require("dotenv").config();
 
-// User registration
 exports.registerUser = async (req, res) => {
   try {
     const { username, email, password, gender, age } = req.body;
 
-    // Validate request body
     if (!username || !email || !password) {
       return res
         .status(400)
         .json({ message: "Please provide username, email, and password" });
     }
 
-    // Check if username or email already exists
     const [userExists] = await pool.execute(
       "SELECT * FROM Users WHERE Username = ? OR Email = ?",
       [username, email]
@@ -27,17 +24,13 @@ exports.registerUser = async (req, res) => {
         .json({ message: "Username or email already exists" });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Insert new user
     const [result] = await pool.execute(
       "INSERT INTO Users (Username, Email, Password, Gender, Age) VALUES (?, ?, ?, ?, ?)",
       [username, email, hashedPassword, gender || null, age || null]
     );
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: result.insertId, username },
       process.env.JWT_SECRET,
@@ -59,19 +52,16 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// User login
 exports.loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate request body
     if (!username || !password) {
       return res
         .status(400)
         .json({ message: "Please provide username and password" });
     }
 
-    // Check if user exists
     const [users] = await pool.execute(
       "SELECT User_Id, Username, Email, Password FROM Users WHERE Username = ?",
       [username]
@@ -83,13 +73,11 @@ exports.loginUser = async (req, res) => {
 
     const user = users[0];
 
-    // Verify password
     const isMatch = await bcrypt.compare(password, user.Password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: user.User_Id, username: user.Username },
       process.env.JWT_SECRET,
@@ -111,12 +99,10 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Get user profile
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get user data
     const [users] = await pool.execute(
       "SELECT User_Id, Username, Email, Gender, Age, Date_Joined FROM Users WHERE User_Id = ?",
       [userId]
@@ -127,8 +113,6 @@ exports.getUserProfile = async (req, res) => {
     }
 
     const user = users[0];
-
-    // Get user stats (total games played)
     const [stats] = await pool.execute(
       `
       SELECT 
@@ -141,7 +125,6 @@ exports.getUserProfile = async (req, res) => {
       [userId, userId, userId, userId, userId]
     );
 
-    // Get best scores/times for each game
     const [bestScores] = await pool.execute(
       `
       SELECT 
@@ -173,7 +156,6 @@ exports.updateUserProfile = async (req, res) => {
     const userId = req.user.id;
     const { age, gender } = req.body;
 
-    // Update user data
     await pool.execute(
       "UPDATE Users SET Age = ?, Gender = ? WHERE User_Id = ?",
       [age || null, gender || null, userId]

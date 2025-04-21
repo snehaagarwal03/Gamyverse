@@ -213,7 +213,6 @@
         </div>
       </header>
 
-      <!-- Game Container -->
       <div class="game-container">
         <a href="../dashboard.html" class="back-to-dashboard">
           Back to Dashboard
@@ -242,9 +241,7 @@
         </div>
 
         <div class="grid-wrapper">
-          <div class="grid-container" id="grid-container">
-            <!-- Grid cells will be created dynamically -->
-          </div>
+          <div class="grid-container" id="grid-container"></div>
           <div class="game-over-overlay" id="game-over-overlay">
             <h2>Game Over!</h2>
             <p>Your score: <span id="final-score">0</span></p>
@@ -279,9 +276,7 @@
                 <th>Score</th>
               </tr>
             </thead>
-            <tbody id="leaderboard-body">
-              <!-- Leaderboard entries will be inserted here -->
-            </tbody>
+            <tbody id="leaderboard-body"></tbody>
           </table>
         </div>
       </div>
@@ -322,28 +317,19 @@
     <script src="../js/games.js"></script>
     <script src="../js/leaderboard.js"></script>
     <script>
-      // Initialize Feather icon
       document.addEventListener("DOMContentLoaded", () => {
         feather.replace();
-
-        // Check if user is logged in
         checkAuthStatus();
-
-        // Update high score display
         updateHighScore();
-
-        // Initialize game
         initializeGame();
       });
 
-      // Game variables
       let grid = [];
       let score = 0;
       let gameOver = false;
       let gameWon = false;
       let hasChanged = false;
 
-      // DOM elements
       const gridContainer = document.getElementById("grid-container");
       const newGameBtn = document.getElementById("new-game-btn");
       const saveScoreBtn = document.getElementById("save-score-btn");
@@ -357,25 +343,17 @@
       const restartBtn = document.getElementById("restart-btn");
       const leaderboardDiv = document.getElementById("leaderboard");
 
-      // Event listeners
       newGameBtn.addEventListener("click", resetGame);
       saveScoreBtn.addEventListener("click", saveScore);
       showLeaderboardBtn.addEventListener("click", toggleLeaderboard);
       restartBtn.addEventListener("click", resetGame);
-
-      // Keyboard event listener
       document.addEventListener("keydown", handleKeyPress);
 
-      // Initialize game
       function initializeGame() {
-        // Create grid cells
         createGrid();
-
-        // Start a new game
         resetGame();
       }
 
-      // Create the grid
       function createGrid() {
         gridContainer.innerHTML = "";
 
@@ -389,36 +367,21 @@
         }
       }
 
-      // Reset game
       function resetGame() {
-        // Initialize empty grid
         grid = Array(4)
           .fill()
           .map(() => Array(4).fill(0));
-
-        // Reset score
         score = 0;
         scoreDisplay.textContent = score;
-
-        // Reset game state
         gameOver = false;
         gameWon = false;
-
-        // Hide game over overlay
         gameOverOverlay.style.display = "none";
-
-        // Disable save score button
         saveScoreBtn.disabled = true;
-
-        // Clear all cells
         clearCells();
-
-        // Add two initial tiles
         addRandomTile();
         addRandomTile();
       }
 
-      // Clear all cells
       function clearCells() {
         const cells = document.querySelectorAll(".grid-cell");
         cells.forEach((cell) => {
@@ -427,9 +390,7 @@
         });
       }
 
-      // Add a random tile to the grid
       function addRandomTile() {
-        // Find all empty cells
         const emptyCells = [];
         for (let row = 0; row < 4; row++) {
           for (let col = 0; col < 4; col++) {
@@ -439,26 +400,18 @@
           }
         }
 
-        // If no empty cells, return
         if (emptyCells.length === 0) return;
 
-        // Choose a random empty cell
         const randomCell =
           emptyCells[Math.floor(Math.random() * emptyCells.length)];
 
-        // Place a 2 or 4 in the cell (90% chance of 2, 10% chance of 4)
         const value = Math.random() < 0.9 ? 2 : 4;
         grid[randomCell.row][randomCell.col] = value;
-
-        // Update UI
         updateCellUI(randomCell.row, randomCell.col, value);
       }
 
-      // Update cell UI
       function updateCellUI(row, col, value) {
         const cell = document.getElementById(`cell-${row}-${col}`);
-
-        // Clear existing classes
         cell.className = "grid-cell";
 
         if (value === 0) {
@@ -470,7 +423,6 @@
         }
       }
 
-      // Handle key press
       function handleKeyPress(e) {
         if (gameOver) return;
 
@@ -490,21 +442,17 @@
             moved = moveRight();
             break;
           default:
-            return; // Ignore other keys
+            return;
         }
 
         if (moved) {
-          // Add a new tile after a valid move
           addRandomTile();
-
-          // Check for game over
           if (isGameOver()) {
             endGame();
           }
         }
       }
 
-      // Move tiles up
       function moveUp() {
         hasChanged = false;
 
@@ -525,7 +473,6 @@
         return hasChanged;
       }
 
-      // Move tiles down
       function moveDown() {
         hasChanged = false;
 
@@ -546,7 +493,6 @@
         return hasChanged;
       }
 
-      // Move tiles left
       function moveLeft() {
         hasChanged = false;
 
@@ -562,7 +508,6 @@
         return hasChanged;
       }
 
-      // Move tiles right
       function moveRight() {
         hasChanged = false;
 
@@ -579,12 +524,8 @@
         return hasChanged;
       }
 
-      // Move and merge tiles in a line
       function moveAndMerge(line) {
-        // Remove zeros
         const nonZeros = line.filter((val) => val !== 0);
-
-        // Merge adjacent equal numbers
         const merged = [];
         for (let i = 0; i < nonZeros.length; i++) {
           if (i < nonZeros.length - 1 && nonZeros[i] === nonZeros[i + 1]) {
@@ -592,10 +533,9 @@
             merged.push(mergedValue);
             score += mergedValue;
             scoreDisplay.textContent = score;
-            i++; // Skip the next number since it's merged
+            i++;
             hasChanged = true;
 
-            // Check for win condition (2048 tile)
             if (mergedValue === 2048 && !gameWon) {
               gameWon = true;
               alert("Congratulations! You reached 2048!");
@@ -606,10 +546,8 @@
           }
         }
 
-        // Pad with zeros to maintain length
         const result = merged.concat(Array(4 - merged.length).fill(0));
 
-        // Check if the line has changed
         if (JSON.stringify(line) !== JSON.stringify(result)) {
           hasChanged = true;
         }
@@ -617,9 +555,7 @@
         return result;
       }
 
-      // Check if game is over
       function isGameOver() {
-        // Check for empty cells
         for (let row = 0; row < 4; row++) {
           for (let col = 0; col < 4; col++) {
             if (grid[row][col] === 0) {
@@ -628,68 +564,47 @@
           }
         }
 
-        // Check for possible merges
         for (let row = 0; row < 4; row++) {
           for (let col = 0; col < 4; col++) {
-            // Check right
             if (col < 3 && grid[row][col] === grid[row][col + 1]) {
               return false;
             }
-
-            // Check down
             if (row < 3 && grid[row][col] === grid[row + 1][col]) {
               return false;
             }
           }
         }
 
-        // No moves available
         return true;
       }
 
-      // End the game
-      // End the game
       function endGame() {
         gameOver = true;
-
-        // Update final score
         finalScoreDisplay.textContent = score;
         saveScoreBtn.disabled = false;
-
-        // Show game over overlay
         gameOverOverlay.style.display = "flex";
-
-        // Also check if this is a new high score for immediate visual feedback
         const currentHighScore = parseInt(highScoreDisplay.textContent) || 0;
+
         if (score > currentHighScore) {
-          // Update high score display immediately for better UX
           highScoreDisplay.textContent = score;
           console.log("New high score achieved!");
         }
 
-        // Also fetch from server to ensure we have the latest data
         updateHighScore();
       }
 
-      // Save score
-      // Save score
       function saveScore() {
         if (score === 0) return;
 
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        // Save score using API
         saveHighScore("2048", score, false)
           .then((success) => {
             if (success) {
-              // Update UI to show success
               saveScoreBtn.textContent = "Score Saved!";
               saveScoreBtn.disabled = true;
-              // Update high score display
               updateHighScore();
-
-              // Update leaderboard if it's visible
               if (leaderboardDiv.style.display === "block") {
                 toggleLeaderboard();
                 toggleLeaderboard();
@@ -712,13 +627,10 @@
           });
       }
 
-      // Update high score display
-      // Update high score display
       function updateHighScore() {
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         if (!currentUser) return;
 
-        // Fetch high score from API instead of localStorage
         fetch(`${window.API_URL}/sessions/stats`, {
           headers: {
             Authorization: `Bearer ${getAuthToken()}`,
@@ -740,16 +652,12 @@
           });
       }
 
-      // Toggle leaderboard visibility
-      // Toggle leaderboard visibility
-      // Toggle leaderboard visibility
       function toggleLeaderboard() {
         if (leaderboardDiv.style.display === "none") {
           leaderboardDiv.style.display = "block";
           showLeaderboardBtn.textContent = "Hide Leaderboard";
 
           try {
-            // Use the existing displayLeaderboard function from leaderboard.js
             displayLeaderboard("2048");
           } catch (error) {
             console.error("Error loading leaderboard:", error);
