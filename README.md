@@ -13,14 +13,14 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 
 <img width="1776" height="955" alt="Landing Page" src="https://github.com/user-attachments/assets/fb154cb3-294b-47cb-b4f9-d3c28418ebd0" />
 
-## Table of Contents
+## 🫙 Table of Contents
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Environment Setup](#environment-setup)
-- [Acknowledgments](#acknowledgments)
+- ✨ [Features](#-features)
+- 🛠️ [Tech Stack](#-tech-stack)
+- 🗂️ [Project Structure](#-project-structure)
+- 🚀 [Getting Started](#-getting-started)
+- ⚙️ [Environment Setup](#-environment-setup)
+- 🙏 [Acknowledgments](#-acknowledgments)
 
 ## ✨ Features
 
