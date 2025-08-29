@@ -2,8 +2,6 @@
 
 GamyVerse is a modern, full-stack gaming platform where users can play classic games, track their scores, and manage their profiles. The platform features user authentication, a leaderboard, and a beautiful responsive UI. Built with Node.js, Express, MySQL, and vanilla HTML/CSS/JS.
 
----
-
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js&logoColor=white&style=for-the-badge)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-4.x-black?logo=express&logoColor=white&style=for-the-badge)](https://expressjs.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.x-blue?logo=mysql&logoColor=white&style=for-the-badge)](https://www.mysql.com/)
@@ -11,13 +9,12 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white&style=for-the-badge)](https://developer.mozilla.org/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black&style=for-the-badge)](https://developer.mozilla.org/docs/Web/JavaScript)
 
----
+
 
 ## 📸 Project Preview
 
-![Landing Page]()
+<img width="1776" height="955" alt="Landing Page" src="https://github.com/user-attachments/assets/fb154cb3-294b-47cb-b4f9-d3c28418ebd0" />
 
----
 
 ## 📑 Table of Contents
 
@@ -28,7 +25,6 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 - [Environment Setup](#environment-setup)
 - [Acknowledgments](#acknowledgments)
 
----
 
 ## ✨ Features
 
@@ -40,7 +36,6 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 - Secure password hashing
 - MySQL database integration
 
----
 
 ## 🛠️ Tech Stack
 
@@ -49,7 +44,6 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 - **Frontend:** [HTML5](https://developer.mozilla.org/docs/Web/HTML), [CSS3](https://developer.mozilla.org/docs/Web/CSS), [JavaScript](https://developer.mozilla.org/docs/Web/JavaScript)
 - **Icons:** [Feather Icons](https://feathericons.com/)
 
----
 
 ## 🗂️ Project Structure
 
@@ -75,7 +69,6 @@ gamyverse
 └── README.md
 ```
 
----
 
 ## 🚀 Getting Started
 
@@ -99,7 +92,7 @@ gamyverse
 6. **Serve the frontend:**
    - Use Live Server in the `frontend` folder, or let Express serve static files.
 
----
+
 
 ## ⚙️ Environment Setup
 
@@ -116,7 +109,7 @@ gamyverse
 - **Node.js version:** 18.x or above recommended
 - **MySQL version:** 8.x or compatible
 
----
+
 
 ## 🙏 Acknowledgments
 
