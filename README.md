@@ -9,14 +9,11 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white&style=for-the-badge)](https://developer.mozilla.org/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black&style=for-the-badge)](https://developer.mozilla.org/docs/Web/JavaScript)
 
-
-
 ## 📸 Project Preview
 
 <img width="1776" height="955" alt="Landing Page" src="https://github.com/user-attachments/assets/fb154cb3-294b-47cb-b4f9-d3c28418ebd0" />
 
-
-## 📑 Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -24,7 +21,6 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 - [Getting Started](#getting-started)
 - [Environment Setup](#environment-setup)
 - [Acknowledgments](#acknowledgments)
-
 
 ## ✨ Features
 
@@ -36,14 +32,12 @@ GamyVerse is a modern, full-stack gaming platform where users can play classic g
 - Secure password hashing
 - MySQL database integration
 
-
 ## 🛠️ Tech Stack
 
 - **Backend:** [Node.js](https://nodejs.org/), [Express](https://expressjs.com/)
 - **Database:** [MySQL](https://www.mysql.com/)
 - **Frontend:** [HTML5](https://developer.mozilla.org/docs/Web/HTML), [CSS3](https://developer.mozilla.org/docs/Web/CSS), [JavaScript](https://developer.mozilla.org/docs/Web/JavaScript)
 - **Icons:** [Feather Icons](https://feathericons.com/)
-
 
 ## 🗂️ Project Structure
 
@@ -69,7 +63,6 @@ gamyverse
 └── README.md
 ```
 
-
 ## 🚀 Getting Started
 
 1. **Clone the repository:**
@@ -92,8 +85,6 @@ gamyverse
 6. **Serve the frontend:**
    - Use Live Server in the `frontend` folder, or let Express serve static files.
 
-
-
 ## ⚙️ Environment Setup
 
 - **.env file example:**
@@ -108,8 +99,6 @@ gamyverse
   ```
 - **Node.js version:** 18.x or above recommended
 - **MySQL version:** 8.x or compatible
-
-
 
 ## 🙏 Acknowledgments
 
